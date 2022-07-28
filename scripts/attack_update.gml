@@ -1,62 +1,78 @@
 //B - Reversals
+if (attack == AT_NSPECIAL || attack == AT_FSPECIAL || attack == AT_DSPECIAL || attack == AT_USPECIAL){
+	trigger_b_reverse();
+}
+
+
+// voice
+
 switch(attack){
-	case AT_NSPECIAL:
-	case AT_FSPECIAL:
-	case AT_DSPECIAL:
-	case AT_USPECIAL:
-		trigger_b_reverse();
+	case AT_JAB:
+		voice_window(2, VB_ATK_SMALL);
 		break;
+	case AT_DATTACK:
+		break;
+	case AT_FTILT:
+		voice_window(1, VB_ATK_SMALL);
+		break;
+	case AT_DTILT:
+		voice_window(1, VB_ATK_SMALL);
+		break;
+	case AT_UTILT:
+		voice_window(1, VB_ATK_SMALL);
+		break;
+	case AT_NAIR:
+		voice_window(1, VB_ATK_SMALL);
+		break;
+	case AT_FAIR:
+		voice_window(2, VB_ATK_MED);
+		break;
+	case AT_BAIR:
+		voice_window(1, VB_ATK_MED);
+		break;
+	case AT_UAIR:
+		voice_window(1, VB_ATK_BIG);
+		break;
+	case AT_DAIR:
+		voice_window(2, VB_ATK_MED);
+		break;
+	case AT_FSTRONG:
+		voice_window(4, VB_ATK_BIG);
+		break;
+	case AT_USTRONG:
+		voice_window(2, VB_ATK_BIG);
+		break;
+	case AT_DSTRONG:
+		voice_window(3, VB_ATK_BIG);
+		break;
+	case AT_TAUNT:
+		if window == 1 && window_timer == 1{
+			voice_play(VB_TAUNT);
+		}
 }
 
 
 
-// per-attack logic
-
 switch(attack){
-	
-	// give your moves some "pop" by spawning dust during them!
-	
-	case AT_JAB:
-		was_parried = false; // easy method for single-hit jabs
-	case AT_FTILT:
-	case AT_DTILT:
-		if window == 1 && window_timer == phone_window_end{
-			array_push(phone_dust_query, [x, y, "dash", spr_dir]);
-		}
-		break;
-	case AT_UTILT:
-		if window == 1 && window_timer == phone_window_end{
-			array_push(phone_dust_query, [x, y, "dash", spr_dir]);
-			array_push(phone_dust_query, [x, y, "dash", -spr_dir]);
-		}
-		break;
-	case AT_FSTRONG:
-		if window == 2 && window_timer == phone_window_end{
-			array_push(phone_dust_query, [x, y, "dash_start", spr_dir]);
-		}
-		break;
-	case AT_USTRONG:
-		if window == 2 && window_timer == phone_window_end{
-			array_push(phone_dust_query, [x, y, "dash_start", spr_dir]);
-			array_push(phone_dust_query, [x, y, "dash_start", -spr_dir]);
-		}
-		break;
-	
-	
-	
 	case AT_NSPECIAL:
 		switch(window){
 			case 1: // startup
-				beam_juice = 30; // amt of energy "left" in the beam
-				beam_juice_max = 60 * 8;
-				beam_length = 0; // current length of beam
-				hsp = clamp(hsp, -2, 2);
-				vsp = min(vsp, 3);
+				if window_timer == 1{
+					beam_juice = 60 + 60 * (ssj > 0); // 30 + 60 * (...)
+					beam_juice_max = 60 * 8;
+					beam_length = 0; // current length of beam
+					hsp = clamp(hsp, -2, 2);
+					vsp = min(vsp, 3);
+					has_updated_beam_kb = false;
+					beam_clash_buddy = noone;
+					beam_clash_timer = 0;
+					beam_clash_timer_max = 120;
+					beam_angle = 0;
+				}
+				if window_timer == phone_window_end{
+					voice_play(VB_KAMEHAME);
+				}
 				can_fast_fall = false;
-				has_updated_beam_kb = false;
-				beam_clash_buddy = noone;
-				beam_clash_timer = 0;
-				beam_clash_timer_max = 120;
 				break;
 			case 2: // charge loop
 				if window_timer == 1{
@@ -65,79 +81,97 @@ switch(attack){
 				if beam_juice > 180{
 					shake_camera(floor((beam_juice - 180) / 30), 1);
 				}
+				switch((right_down - left_down) * spr_dir){
+					default:
+						beam_angle = 30;
+						break;
+					case 1:
+						beam_angle = 15;
+						break;
+					case -1:
+						beam_angle = 45;
+						break;
+				}
+				beam_angle *= (up_down - down_down);
+				beam_angle = (beam_angle + 360) % 360;
+				beam_angle = point_direction(0, 0, lengthdir_x(1, beam_angle) * spr_dir, lengthdir_y(1, beam_angle));
 				if special_down && beam_juice < beam_juice_max{
 					beam_juice++;
 				}
 				else{
 					window++;
 					window_timer = 0;
-					
-					var can_angle = true;
-					
-					switch((right_down - left_down) * spr_dir){
-						default:
-							beam_angle = 30;
-							break;
-						case 1:
-							beam_angle = 15;
-							break;
-						case -1:
-							beam_angle = 45;
-							break;
-					}
-					beam_angle *= (up_down - down_down) * can_angle;
-					beam_angle = (beam_angle + 360) % 360;
-					beam_angle = point_direction(0, 0, lengthdir_x(1, beam_angle) * spr_dir, lengthdir_y(1, beam_angle));
-				}
-				hsp = clamp(hsp, -2, 2);
-				vsp = min(vsp, 3);
-				can_fast_fall = false;
-				
-				if window_timer == phone_window_end || window_timer == phone_window_end - 3|| window_timer == phone_window_end - 6{
-					array_push(phone_dust_query, [x - 20 * spr_dir + sin(window_timer + 2) * 6 * spr_dir, y, beam_juice > 300 ? "dash_start" : (beam_juice > 180 ? "dash" : "walk"), spr_dir]);
-				}
-				if(beam_angle > 0 && beam_angle < 180){
-					set_window_value(AT_NSPECIAL, 3, AG_WINDOW_ANIM_FRAME_START, 5);
-					set_window_value(AT_NSPECIAL, 4, AG_WINDOW_ANIM_FRAME_START, 6);
-					set_window_value(AT_NSPECIAL, 5, AG_WINDOW_ANIM_FRAME_START, 7);
-					set_window_value(AT_NSPECIAL, 6, AG_WINDOW_ANIM_FRAME_START, 7);
-					set_window_value(AT_NSPECIAL, 7, AG_WINDOW_ANIM_FRAME_START, 10);
-				}else if(beam_angle < 360 && beam_angle > 180){
-					set_window_value(AT_NSPECIAL, 3, AG_WINDOW_ANIM_FRAME_START, 18);
-					set_window_value(AT_NSPECIAL, 4, AG_WINDOW_ANIM_FRAME_START, 19);
-					set_window_value(AT_NSPECIAL, 5, AG_WINDOW_ANIM_FRAME_START, 19);
-					set_window_value(AT_NSPECIAL, 6, AG_WINDOW_ANIM_FRAME_START, 19);
-					set_window_value(AT_NSPECIAL, 7, AG_WINDOW_ANIM_FRAME_START, 23);
-				}else if(beam_angle == 0 || beam_angle == 180){
-					set_window_value(AT_NSPECIAL, 3, AG_WINDOW_ANIM_FRAME_START, 12);
-					set_window_value(AT_NSPECIAL, 4, AG_WINDOW_ANIM_FRAME_START, 13);
-					set_window_value(AT_NSPECIAL, 5, AG_WINDOW_ANIM_FRAME_START, 13);
-					set_window_value(AT_NSPECIAL, 6, AG_WINDOW_ANIM_FRAME_START, 13);
-					set_window_value(AT_NSPECIAL, 7, AG_WINDOW_ANIM_FRAME_START, 16);
-				}
-				break;
-			case 3: // post-charge
-				hsp *= 0.75;
-				vsp *= 0.75;
-				can_move = false;
-				can_fast_fall = false;
-				was_fully_charged = (beam_juice >= beam_juice_max);
-				if window_timer == phone_window_end{
-					spawn_nspecial_hitbox(1);
-					sound_play(sfx_dbfz_kame_fire);
-					array_push(phone_dust_query, [x, y, "dash_start", spr_dir]);
+					sound_play(sfx_dbfz_swipe_weak1);
+					sound_play(asset_get("mfx_star"), false, noone, 1, 1.2);
+					var hfx = spawn_hit_fx(x - 24 * spr_dir, y - 38, 305);
+					hfx.depth = depth - 3;
+					array_push(phone_dust_query, [x, y, "land", spr_dir]);
 					
 					var x1 = x + 72 * spr_dir;
 					var y1 = y - 40 + lengthdir_y(32, beam_angle);
 					
 					switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
 						case 1: // down
-							x1 = x + 66 * spr_dir;
+							x1 = x + 74 * spr_dir;
 							y1 = y - 6;
 							break;
 						case -1: // up
 							x1 = x + 60 * spr_dir;
-							y1 = y - 68;
+							y1 = y - 72;
+							break;
+					}
+					
+					var h = spawn_hit_fx(x1, y1, vfx_ftilt_destroy);
+					h.spr_dir = 1;
+					h.draw_angle = beam_angle;
+					h.depth = depth - 1;
+				}
+				hsp = clamp(hsp, -2, 2);
+				vsp = min(vsp, 3);
+				can_fast_fall = false;
+				
+				if window_timer == phone_window_end || window_timer == phone_window_end - 3|| window_timer == phone_window_end - 6{
+					spawn_base_dust(x - 20 * spr_dir + sin(window_timer + 2) * 6 * spr_dir, y, beam_juice > 300 ? "dash_start" : (beam_juice > 180 ? "dash" : "walk"));
+				}
+				break;
+			case 3: // post-charge
+				hsp = 0;
+				vsp = 0;
+				can_move = false;
+				can_fast_fall = false;
+				was_fully_charged = (beam_juice >= beam_juice_max);
+				if window_timer == 13{ // 1
+					voice_play(VB_HA);
+					
+					// also change in nspecial.gml
+					set_window_value(AT_NSPECIAL, 7, AG_WINDOW_LENGTH, 16 + floor(ease_sineIn(0, 30, beam_juice, beam_juice_max)));
+				}
+				if window_timer == phone_window_end{
+					if beam_juice >= beam_juice_max && !ssj{
+						chooseSsj();
+						sound_play(sfx_dbfz_charge);
+						ki = ki_max;
+						kaioken = 0;
+					}
+					if funny_broken_mode || has_rune("L"){
+						beam_juice = beam_juice_max;
+					}
+					spawn_form_aura();
+					spawn_nspecial_hitbox(1);
+					sound_play(sfx_dbfz_kame_fire);
+					spawn_base_dust(x, y, "dash_start");
+					
+					var x1 = x + 72 * spr_dir;
+					var y1 = y - 40 + lengthdir_y(32, beam_angle);
+					
+					switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
+						case 1: // down
+							x1 = x + 74 * spr_dir;
+							y1 = y - 6;
+							break;
+						case -1: // up
+							x1 = x + 60 * spr_dir;
+							y1 = y - 72;
 							break;
 					}
 					
@@ -159,7 +193,7 @@ switch(attack){
 				can_fast_fall = false;
 				
 				if window_timer % 2{
-					array_push(phone_dust_query, [x - 20 * spr_dir + sin(window_timer + 2) * 6 * spr_dir, y, "dash", spr_dir]);
+					spawn_base_dust(x - 20 * spr_dir + sin(window_timer + 2) * 6 * spr_dir, y, "dash");
 				}
 				shake_camera(1, 1);
 			case 4: // beam overshoot
@@ -214,12 +248,12 @@ switch(attack){
 					
 					switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
 						case 1: // down
-							x1 = x + 66 * spr_dir;
+							x1 = x + 74 * spr_dir;
 							y1 = y - 6;
 							break;
 						case -1: // up
 							x1 = x + 60 * spr_dir;
-							y1 = y - 68;
+							y1 = y - 72;
 							break;
 					}
 					
@@ -239,9 +273,38 @@ switch(attack){
 				can_move = false;
 				can_fast_fall = false;
 				break;
+			case 8: // endlag pt 2
+				set_window_value(attack, window, AG_WINDOW_TYPE, 7 * free);
+				break;
 		}
-	break;
-	
+		break;
+	case AT_FSPECIAL:
+		can_move = false;
+		can_fast_fall = false;
+		switch(window){
+			case 1:
+				hsp *= 0.5;
+				vsp *= 0.5;
+				if window_timer == phone_window_end{
+					hsp = 35 * spr_dir;
+				}
+				break;
+			case 2:
+				vsp = 0;
+				can_wall_jump = true;
+				if (special_pressed){
+					window = 3;
+					window_timer = 0;
+					destroy_hitboxes();
+				}
+				break;
+			case 3:
+				hsp *= 0.5;
+				// vsp *= 0.5;
+				can_wall_jump = true;
+				break;
+		}
+		break;
 	
 	
 	
@@ -296,30 +359,89 @@ switch(attack){
 	
 	
 	case AT_TAUNT:
-		if window_timer == 1{
-			clear_button_buffer(PC_SHIELD_PRESSED);
-		}
-		if shield_pressed && window == 1 && window_timer < 16{
-			attack_end();
-			set_attack(AT_TAUNT_2);
+		if window_timer == 1 taunt_time = 0;
+		if window_timer == 30 && taunt_down{
+			window_timer--;
 		}
 		break;
-	
-	
-	
-	case AT_TAUNT_2:
-		if !(shield_down || taunt_down){
-			attack_end();
-			set_state(PS_IDLE);
-		}
-		if window_timer == phone_window_end - 32{
-			spawn_hit_fx(x + 16 * spr_dir, y - 44, 113);
-			sound_play(asset_get("mfx_star"));
-		}
-		if window_timer == phone_window_end - 4{
-			spawn_hit_fx(x, y - 32, 143);
-		}
-		break;
+}
+
+
+
+
+
+#define check_string_for_name(player, string)
+
+return string_count(string, string_lower(get_char_info(player, INFO_STR_NAME)))
+
+
+
+#define chooseSsj
+
+ssj = SSJ_1;
+if shield_down{
+	ssj = SSJ_UI;
+}
+if attack_down{
+	ssj = SSJ_3;
+	if shield_down{
+		ssj = SSJ_BLUE;
+	}
+}
+if jump_down{
+	ssj = SSJ_GOD;
+	if shield_down{
+		ssj = SSJ_BLUE;
+	}
+}
+
+
+
+#define voice_window(wdw, idx)
+
+if window == wdw && window_timer == phone_window_end - 2{
+	voice_play(idx);
+}
+
+
+
+#define voice_play(idx)
+
+cur_vc = idx;
+user_event(0);
+
+
+
+#define spawn_form_aura
+
+if ssj return spawn_hit_fx(x, y, vfx_ssj_start);
+if kaioken return spawn_hit_fx(x, y, vfx_kaioken_start);
+
+
+
+#define ssj_cancel(win)
+
+if ssj && window == win && has_hit && !hitpause{
+	if funny_broken_mode || has_rune("K"){
+		iasa_script();
+		return;
+	}
+	can_special = true;
+	can_strong = true;
+	can_ustrong = true;
+}
+
+
+
+#define set_pratfall(win)
+
+if hitpause || has_hit{
+	set_window_value(attack, win, AG_WINDOW_TYPE, 0);
+}
+
+if !free && get_window_value(attack, win, AG_WINDOW_TYPE) == 7 && attack != AT_NSPECIAL{
+	attack_end();
+	set_state(PS_PRATLAND);
 }
 
 
@@ -361,7 +483,7 @@ else{
 			beam_clash_buddy.beam_length -= 32;
 			beam_juice = min(beam_juice + 20, beam_juice_max);
 			beam_clash_buddy.beam_juice = max(beam_clash_buddy.beam_juice - 10, 10);
-			sound_play(sfx_dbfz_kame_charge, false, noone, 1, 1 + beam_juice * 0.001);
+			sound_play(sfx_dbfz_kame_charge, false, noone, 1, 1 + beam_juice * 0.001)
 		}
 	}
 }
@@ -375,16 +497,16 @@ if hitpause && num == 1 return;
 attack_end();
 
 var x1 = 72;
-var y1 = -44 + lengthdir_y(32, beam_angle);
+var y1 = -40 + lengthdir_y(32, beam_angle);
 
 switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
 	case 1: // down
-		x1 = 66;
+		x1 = 74;
 		y1 = -6;
 		break;
 	case -1: // up
 		x1 = 60;
-		y1 = -68;
+		y1 = -72;
 		break;
 }
 
@@ -416,7 +538,7 @@ for (var i = 0; i * 32 < beam_length && i < 32 && cur_x == clamp(cur_x, phone_bl
 
 
 
-#define spawn_base_dust // written by supersonic
+#define spawn_base_dust // supersonic
 /// spawn_base_dust(x, y, name, dir = 0)
 ///spawn_base_dust(x, y, name, ?dir)
 //This function spawns base cast dusts. Names can be found below.
@@ -449,5 +571,3 @@ newdust.dust_color = dust_color; //set the dust color
 if dir != 0 newdust.spr_dir = dir; //set the spr_dir
 newdust.draw_angle = dfa;
 return newdust;
-
-

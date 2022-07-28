@@ -28,7 +28,7 @@ Set parameters that are used by the CSS drawing code.
 #define CORE_css_draw
 
 // The number of alt costumes your char has, up to 32.
-num_alts = 6;
+num_alts = 12;
 
 // Whether or not to display a name for each alt.
 use_alt_names = true;
@@ -41,12 +41,18 @@ alt_ui_recolor = 0;
 
 // The list of names for the alts, if enabled.
 alt_names = [
-	"Vanilla",
-	"Blueberry",
-	"Strawberry",
-	"Mint",
-	"gray",
-	"Lemon",
+	"Perfect Cell",
+	"Cell Jr.",
+	"Frieza",
+	"Golden Frieza",
+	"Majin Buu",
+	"Hit",
+	"Jiren",
+	"Spoilers",
+	"Trans-form",
+	"Manga",
+	"Gameboy",
+	"Abyss",
 	];
 
 
@@ -67,7 +73,8 @@ MunoPhone Touch.
 
 // Character's name, used in a couple of places in the phone.
 // (if you delete this line, it'd just use the config.ini name)
-muno_char_name = "Sandbert";
+muno_char_name = "Goku";
+muno_char_id = 10;
 
 // Whether or not the phone sprite should recolor w/ your alt costume.
 // (set to "true" if you make a custom phone sprite in your char's colors)
@@ -76,32 +83,19 @@ phone.uses_shader = false;
 // If you use a custom phone sprite that's taller than the default, enter how
 // much taller it is here. (measured in ingame pixels; so if editing the default
 // phone sprite, multiply it by two)
-phone.extra_top_size = 0;
+phone.extra_top_size = 8;
 
 // Set to true and the "Fast Graphics" feature will be enabled; see _readme.gml.
-phone.supports_fast_graphics = false;
+phone.supports_fast_graphics = true;
 
 // Set to true and the phone will NOT activate Fast Fraphics when FPS gets low.
 phone.dont_fast = false;
 
-// Set to true and this will DISABLE a lot of the phone's side features, mostly
-// the coding shortcuts.
-// See _docs.gml for a full list of what it disables.
-// If you don't intend to use any of those bonus features in your character,
-// you should set this to true since it saves a bit of performance.
-// (it's false by default since Phone Sandbert uses some of those features)
+// Set to true and this will DISABLE a lot of the phone's side utilities.
+// If you're porting the phone to an existing char and don't need any of these
+// features, you might as well turn on lightweight to save a tiny bit of
+// performance. (see _docs.gml for a full list of what this disables)
 phone.lightweight = false;
-
-// If you've created custom AG_ or HG_ indexes for your character already,
-// use these to change where the phone starts assigning custom AG_s and HG_s.
-// If you have no idea what that means, leave these alone!
-// There's probably an upper bound here, but it's at least 200, so...
-phone.starting_ag_index = 80;
-phone.starting_hg_index = 80;
-
-// The above, but for the AT_PHONE index.
-// Maximum value is 50, minimum value (to avoid overlap w/ normal ones) is 39.
-phone.phone_attack_index = 40;
 
 
 
@@ -169,45 +163,82 @@ so that things like page breaks can work properly.
 
 #define CORE_tips
 
+initTip("SSJ Meter");
+initWords("Goku's iconic Super Saiyan form appears in Rivals as a mid-match transformation - and you don't even need Abyss Runes or a Smash Ball!");
+initWords("The Ki Meter at the bottom of the screen fills up as you deal damage to opponents, and it also fills (much more slowly) when you receive damage. When it's full, press DSpecial to turn Super Saiyan for a limited time!");
+initImage(sprite_get("dspecial"), -5);
+initWords("In Super Saiyan form, you can cancel normal attacks into a Special or Strong on-hit, dash more quickly, and launch opponents further with Strongs... at the cost of taking more knockback.");
+
+initTip("DSpecial: Kaioken");
+initWords("You're unlikely to fill the Ki Meter more than once per match by normal means... but if you want to push your limits, you can use DSpecial to enter Kaioken!");
+initWords("In this state, Goku deals more damage and gains Ki over time... but takes 20 recoil damage over the course of the Kaioken timer.");
+initImage_ext(sprite_get("vfx_kaioken_start"), -5, fa_center, 1, 1, true, c_white, 1, true, noone, noone, noone, noone);
+initImage(sprite_get("dspecial"), -5);
+initWords("You can also hold DSpecial for a while to ''fast forward'' the Kaioken state, basically getting the whole thing over with.");
+
+initTip("Transformation Hitbox");
+initWords("Goku's ''powering up'' pose during DSpecial has a hitbox at the very start, and if it connects, you can cancel it into any action!");
+initImage(sprite_get("dspecial"), -5);
+
+initTip("DSpecial: Spirit Bomb");
+initWords("While in SSJ form, Goku's DSpecial is a powerful Spirit Bomb! This drains the rest of your Ki meter and channels it into a powerful combo move.");
+initWords("It homes in on enemies (unless they're behind the projectile), and then deals a number of rapid hits that depends on how much Ki charge you had left.");
+initImage_ext(sprite_get("dspecial_2"), -5, fa_center, 2, 2, true, c_white, 1, true, noone, noone, noone, noone);
+initImage_ext(sprite_get("sbomb_multihit"), 0, fa_right, 1, 1, true, c_white, 1, true, noone, noone, noone, noone);
+
+var ssj_shortcuts = [
+	"how",
+	"Nothing",
+	"Attack",
+	"Jump",
+	"Jump + Shield or Attack + Shield",
+	"Shield",
+	];
+
+initTip("Other SSJ Forms");
+initWords("Goku is known for pushing his limits in a number of increasingly-powerful Super forms.");
+initWords("In Rivals, you can access several of Goku's forms, but they're just for looks - their strength is all the same.");
+initWords("Pick your favorite one by pressing a button at the exact same time you transform with DSpecial!");
+for (var i = 1; i < array_length(ssjs) - 1; i++){
+	var cur = ssjs[i];
+	initWords_ext(cur.name + ":", fa_left, cur.color, 0, true);
+	initWords_ext("
+	" + ssj_shortcuts[i], fa_left, c_white, 1, false);
+}
+initWords_ext("Note: the Goku Black palette will instead always enter the SSJ Rosé form.", fa_left, c_white, 0, true);
+
 initTip("NSpecial: Kamehameha");
-initWords("This Sandbert's NSpecial is completely different from the normal version of the character: it's Goku's Kamehameha!");
+initWords("What else would Goku's NSpecial be?");
 initWords("The longer it's charged, the more distance it travels. The more distance it has left to travel by the time it reaches the enemy, the more damage and knockback it deals.");
 initWords("If two Kamehamehas clash, you'll get into a beam struggle! Mash B to overpower your opponent.");
-initImage_ext(sprite_get("nspecial"), -4, fa_right, -1, 1, true, c_white, 1, true, noone, noone, noone, noone);
-initImage_ext(sprite_get("nspecial"), -4, fa_left, 1, 1, true, c_white, 1, false, noone, noone, noone, noone);
+initImage_ext(sprite_get("nspecial"), -5, fa_right, -2, 2, true, c_white, 1, true, noone, noone, noone, noone);
+initImage_ext(sprite_get("nspecial"), -5, fa_left, 2, 2, true, c_white, 1, false, noone, noone, noone, noone);
+initWords("P.S. SSJ form gives you a little bit of charge for free!");
 
-initTip("FSpecial: Sandbert Delusion");
-initWords("Just like vanilla Sandbert, you can shorten the FSpecial by pressing B at the correct moment.");
-initWords("It's handy as a mixup when recovering!");
-initImage_ext(sprite_get("fspecial"), -4, fa_center, 1, 1, true, c_white, 1, false, noone, noone, noone, noone);
+initTip("FSpecial: Superdash");
+initWords("Goku's NSpecial and FSpecial both use the same system for precise aim.");
+initWords("You can hold straight up or down to angle the attack, but adding horizontal inputs allows you to choose a shallower or steeper angle.");
+initImage(sprite_get("fspecial"), -5);
+initWords("Try it out with NSpecial, using the angle-preview arrow indicator for reference.");
+initWords("P.S. During FSpecial, hold directly backward to slow down.");
 
-initTip("USpecial: Forbidden Flight");
-initWords("USpecial is significantly toned down from regular Sandbert: its flight has a set, short duration, and you're forced to end with the big hit.");
-initWords("On the bright side, you can now cancel the move into a wall jump! Also, its finishing hit is just as strong as before.");
-initImage_ext(sprite_get("uspecial"), -4, fa_center, 1, 1, true, c_white, 1, false, noone, noone, noone, noone);
+initTip("USpecial: Instant Transmission");
+initWords("Goku's USpecial, unlike Forsburn's, slides along terrain rather than passing through it... which makes sense, if you think about how it works in DBZ. You can still go through platforms, though.");
+initWords("Separately, you can cancel the endlag into an Aerial or NSpecial... but if you fail to hit an opponent, you'll enter pratfall.");
+initImage(sprite_get("uspecial"), -5);
+initWords("In SSJ form, Goku will (once per airtime) auto-target any enemy who is in hitstun! Hold shield to cancel this in favor of manual aim.");
+initWords_ext("Also, SSJ form removes the normal once-per-airtime use limit of FSpecial and Uspecial. (They still have pratfall, and there's a short cooldown - but now you can use them again after hitting an enemy successfully.)", fa_left, c_white, 0, true);
 
-initTip("DSpecial: Hexagon of Power");
-initWords("Sandbert's DSpecial can be canceled into a jump, but only if you successfully hit an opponent.");
-initWords("It's useful for combos, but maybe not as punish-safe as you'd expect based on its appearance.");
-initImage_ext(sprite_get("dspecial"), -4, fa_center, 1, 1, true, c_white, 1, false, noone, noone, noone, noone);
+initTip("F/UTilt: Ki Blasts");
+initWords("FTilt and the second hit of UTilt are both mid-range Ki blasts, which are excellent for poking and even performing combos!");
+initWords("UTilt can be aimed left or right by holding the control stick.");
+initImage_ext(sprite_get("ftilt"), -5, fa_right, 2, 2, true, c_white, 1, true, noone, noone, noone, noone);
+initImage_ext(sprite_get("utilt"), -5, fa_left, 2, 2, true, c_white, 1, false, noone, noone, noone, noone);
 
-initTip("FStrong: Burning Dropkick");
-initWords("During the charge of FStrong, Sandbert slides as if on ice. Get a running start to ambush a foe!");
-initImage_ext(sprite_get("fstrong"), -4, fa_center, 1, 1, true, c_white, 1, false, noone, noone, noone, noone);
-	
-initTip("Sandbert's Lore");
-initWords_ext("Chapter 1", fa_center, c_gray, 0, false);
-initWords("Sandbert, a son of the ruling family of the Firelands, is an experienced and hardened warrior. He has fought many wars for the Fire Capital, a bellicose nation that constantly seeks to expand its influence over neighbouring lands. His courage in battle has made him a hero among his people.");
-initWords("However, his straightforward character and unquestioning allegiance to the Fire Nation blind him at times. He is a reliable general on the field, but naive to the larger politics of Aether. In battle, Sandbert is equally forthright; he uses no weapons except for his razor-sharp claws and ability to control flame.");
-initWords_ext("Chapter 2", fa_center, c_gray, 0, false);
-initWords("When he first arrived in Water Town, the merchant capital of Aether, Sandbert was considered a dangerous nuisance and a criminal. Sandbert is a playful trickster, notorious for escaping even the most precarious of situations.");
-initWords("However, while the Water Merchants denounce Sandbert in public, they do not hesitate to call upon him when they need a situation dealt with quietly. Sandbert is sly and can infiltrate even the most secure strongholds. He can transform into water and confuse enemies with a spray of bubbles, making him the perfect candidate for stealth assignments.");
-initWords_ext("Chapter 3", fa_center, c_gray, 0, false);
-initWords("The youngest trainee in the history of the Air Academy, Sandbert has never lived by anyone's rules but his own. After graduating at the top of his class, he joined the Air Armada, the military force of Air Nation.");
-initWords("Within a year, Sandbert became renowned not just in Air Nation but across Aether as a fierce and unpredictable figher. However, among his superiors, he is more infamous for his brashness and arrogance than for his daring deeds. Currently an Aerial Ace for the Air Armada, Sandbert is wrecking havoc among the Armada's enemies and generals alike.");
-initWords_ext("Chapter 4", fa_center, c_gray, 0, false);
-initWords("Sandbert is a defender of the colossal Aetherian Forest. Deliberate and loyal, he is one of the infamous Wall Runners who patrol the Rock Wall. From their position atop the Wall, Sandbert and his fellow Runners defend both sides of the rock face and the forest below.");
-initWords("While normally slow because of their massive bodies, Wall Runners can curl up into balls and traverse the Wall at high speeds. Unlike other Wall Runners, Sandbert has the legendary ability to control the earth with his will. When in peril, Sandbert can summon the earth to aid him, and he repairs the Wall when it is under siege.");
+initTip("DAttack: Heavy Elbow");
+initWords("Goku's DAttack is a fast elbow strike!");
+initWords("If you go off an edge with this move, you'll have much less ending lag.");
+initImage(sprite_get("dattack"), -5);
 
 
 
@@ -248,166 +279,145 @@ in a Patch.
 
 #define CORE_patches
 
-initPatch("1.5", "20 November, 2021");
-initHeader("MunoPhone Touch Firmware v5");
-initSection("Added a new utility var: phone_game_over, which is true when the game has ended and is in the slow-mo at the end.
-Removed the unused attack grid index AG_MUNO_ATTACK_REFRESH.");
-initHeader("Misc.");
-initSection("Removed some confusing notes from the attack code files.");
+initPatch("1.11", "27 June, 2022");
+initHeader("User Interface");
+initSection("The language switch option is now its own button instead of being tied to cycling through the alts.
+The HUD sprite now updates to reflect the current SSJ form.");
 
-initPatch("1.4", "03 October, 2021");
-initHeader("NAir - Adjustments, Aesthetics");
-initSection("Sped up the move's multi-hits.
-Moved the hitboxes downward.
-Adjusted sprite.");
-initHeader("Taunt - Additions");
-initSection("Added a secret taunt.");
-initHeader("MunoPhone Touch Firmware v4");
-initSection("CSS alt display with >16 alts now uses thinner rectangles instead of two pages.
-Adjusted the position of CSS alt names when playing online.
-Fixed a bug where the Freeze Own Damage Utility was dependent on the character supporting Fast Graphics.
-Fixed a bug where the frame data for parent hitboxes was formatted incorrectly.");
+initPatch("1.10", "02 June, 2022");
+initHeader("DAir - Nerfs");
+initSection("The spike at the start of the move is now a sweetspot (near the tip of his feet) instead of the entire hitbox.");
+initHeader("FStrong - Nerfs");
+initSection("Hitbox size reduced, position adjusted.
+Knockback growth (non-SSJ) 1.05 --> 1.0.");
+initHeader("UStrong - Nerfs");
+initSection("Endlag 15 --> 20.");
 
-initPatch("1.3", "30 September, 2021");
-initHeader("DStrong - Nerfs, Adjustments, Aesthetics");
-initSection("Reduced hitbox size and adjusted position.
-Hitbox lifetime 5 --> 3.
-Adjusted sprite.");
-initHeader("DAttack - Nerfs, Aesthetics");
-initSection("Endlag 10 --> 12.
-Adjusted sprite.");
-initHeader("MunoPhone Touch Firmware v3");
-initSection("Added the Spam Attack Utility.
-The options for Cheats / Utilities will now split into up to four columns for long lists, so the maximum is 40 items.
-The jump button now scrolls backwards through a Cheat / Utility's options.
-Made the Endless Parry Utility only work if the CPU action is set to Parry.
-Fixed the Ranno and Maypul functionality in the CPU Behavior Changes Utility.");
+initPatch("1.9", "10 March, 2022");
+initHeader("DTilt - Buffs");
+initSection("SSJ only: startup 8 --> 6.");
 
-initPatch("1.2", "22 September, 2021");
-initHeader("MunoPhone Touch Firmware v2");
-initSection("Added the Endless Parry Utility.");
+initPatch("1.8", "20 February, 2022");
+initHeader("General - Bugfixes");
+initSection("Fixed sprite size.");
+
+initPatch("1.7", "22 November, 2021");
+initHeader("NSpecial - Nerfs");
+initSection("Air version now has pratfall.");
+initHeader("Rolls - Clarity");
+initSection("Afterimage now moves in the direction of the roll / tech.
+Adjusted afterimage timing.");
+
+initPatch("1.6", "29 October, 2021");
+initHeader("DTilt - Buffs");
+initSection("SSJ only: startup 10 --> 8.");
+initHeader("NSpecial - Bugfixes");
+initSection("Fixed whiff pratfall after USpecial.");
+
+initPatch("1.5", "04 October, 2021");
+initHeader("NSpecial - Nerfs");
+initSection("Base endlag 16 --> 24; adjusted animation timing to match.");
+initHeader("FSpecial - QoL");
+initSection("By holding back on the control stick, you can now halve Goku's flight speed.
+This also happens when parried.");
+initHeader("DSpecial - Buffs, Nerfs");
+initSection("Spirit Bomb projectile lifetime 30 --> 60.
+Spirit Bomb homing ability greatly reduced.
+Air stall reduced while charging meter.");
+initHeader("FTilt - Nerfs");
+initSection("Adjusted projectile's spawn position, lifetime, and travel speed - covers the same distance but at a reduced speed.");
+initHeader("UAir - Nerfs");
+initSection("Knockback growth 0.8 --> 0.7.");
+
+initPatch("1.4", "24 September, 2021");
+initHeader("NSpecial - Nerfs, Buffs, Aesthetics");
+initSection("Post-charge startup 4 --> 16.
+Can no longer break projectiles.
+Initial beam juice 30 --> 60 (SSJ: 90 --> 120).
+Added vfx and sfx to releasing the charge.");
+initHeader("DTilt - Nerfs");
+initSection("Endlag 10 --> 13.
+SSJ only: startup 6 --> 10.");
+initHeader("DSpecial - QoL");
+initSection("There's no longer a time limit on the held DSpecial power-up, so you can go from empty to full in one go if you want.");
+initHeader("Jab 2 - Aesthetics");
+initSection("Edited Goku's hair during this animation.");
+
+initPatch("1.3", "22 September, 2021");
+initHeader("Ki Meter - Nerfs");
+initSection("Goku now loses a bit of ki when hit during Super Saiyan form.");
+initHeader("SSJ - Aesthetics");
+initSection("SSJ forms' hair and vfx are now unshaded when using the Early Access alt.");
+
+initPatch("1.2", "21 September, 2021");
+initHeader("NSpecial - Nerfs");
+initSection("Endlag now increases with charge.");
+initHeader("USpecial - Nerfs, Bugfixes, Adjustments");
+initSection("SSJ homing teleport now limits the height of both Goku and the opponent.
+Teleporting, hitting an enemy with Nair 1, and then whiffing a different aerial no longer causes pratfall.
+Cancel into NSpecial now limits vertical speed.");
+initHeader("DSpecial - Adjustments, Bugfixes, QoL");
+initSection("Spirit Bomb launcher knockback growth 0.7 --> 0.3.
+Spirit Bomb now visibly deflects when hit by an enemy attack.
+Spirit Bomb now reflects on parry.
+Added a second way to access the SSJ Blue form.");
+initHeader("FTilt - Buffs");
+initSection("Can now be used during the cooldown, but only as a melee attack.");
+initHeader("DAttack - Nerfs");
+initSection("Endlag 16 --> 18.
+Travel distance reduced.");
+initHeader("FAir - Buffs");
+initSection("Moved non-sweetspot hitbox forward.");
+initHeader("UAir - Nerfs");
+initSection("Knockback growth 0.9 --> 0.8.");
+initHeader("DAir - Buffs");
+initSection("Can now be reversed on startup.");
+initHeader("DStrong - Buffs");
+initSection("Sourspot knockback growth 0.7 --> 0.8.")
+initHeader("Taunt - Buffs?");
+initSection("Can now be held.");
+initHeader("General - Bugfixes");
+initSection("Corrected animation timings for tech roll.");
 
 initPatch("1.1", "20 September, 2021");
-initHeader("DStrong - Adjustments, Bugfixes");
-initSection("Angle 290 --> 280.
-Fixed hurtbox.");
+initHeader("Stats - Buffs");
+initSection("Air speed 4 --> 5.");
+initHeader("Ki Meter - Buffs");
+initSection("On-hit ki gain multiplier 4 --> 5.
+Goku now receives a small amount of ki when getting hit (multiplier 1).");
+initHeader("USpecial - Nerfs");
+initSection("No longer passes through solid terrain (but does pass through platforms).");
+initHeader("DTilt - Buffs");
+initSection("Endlag 15 --> 10.");
+initHeader("BAir - Adjustments");
+initSection("Angle flipper 0 --> 6.");
+initHeader("UAir - Buffs");
+initSection("Endlag 12 --> 10.
+Knockback growth 0.5 --> 0.9.");
+initHeader("DAir - Buffs");
+initSection("Endlag 10 --> 4.");
+initHeader("FStrong, UStrong - Buffs");
+initSection("Knockback growth 0.9/1.2 --> 1.05/1.3.");
+initHeader("UTilt - Bugfixes");
+initSection("Hit 2's input now works with tilt stick up. (Aiming still requires the left analog stick.)");
+initHeader("Final Smash - Nerfs?");
+initSection("Deals less damage in Rivals of Fighter.");
 
 initPatch("1.0", "19 September, 2021");
-initWords_ext("(Changes from Vanilla Sandbert)", fa_center, c_white, 0, false);
-initHeader("Stats - Nerfs");
-initSection("Most stats made identical to Zetterburn's.
-Prat land time 3 --> 10.");
-initHeader("NSpecial - Reworks");
-initSection("Replaced entirely with a Kamehameha.");
-initHeader("FSpecial - Adjustments, Nerfs, Buffs");
-initSection("Movement code retooled.
-Now has pratfall.
-Damage 6 --> 5.
-Endalg 16 --> 15.
-Can now be canceled into a wall jump.");
-initHeader("USpecial - Reworks, Nerfs, Buffs");
-initSection("Flight now lasts a fixed, much shorter amount of time, and cannot be canceled into pratfall.
-Flight period begins with a bit of initial upward speed, and can now go downward through platforms.
-Hitbox timings adjusted.
-Multihit damage 2 --> 1.
-Multihit active frames no longer leave blind spots.
-Finisher damage 8 --> 6.
-Finisher angle flipper 1 --> 8. (acts pretty much the same)
-Can now be canceled into a wall jump.");
-initHeader("DSpecial - Nerfs");
-initSection("Startup 1 --> 3.
-Can now be jump-canceled only on hit.
-Base knockback 10 --> 8.
-Base hitpause 3 --> 6.");
-initHeader("Jab - Buffs, Nerfs");
-initSection("Now ignores parry stun.
-Endlag 6 --> 9.
-Damage 8 --> 3.");
-initHeader("FTilt - Nerfs");
-initSection("Endlag 9 --> 12.
-Damage 9 --> 6.");
-initHeader("UTilt - Buffs, Nerfs");
-initSection("Hitbox width increased.
-Damage 5 --> 2.");
-initHeader("DTilt - Nerfs");
-initSection("Endlag 10 --> 12.
-Damage 7 --> 5.");
-initHeader("Dash Attack - Nerfs");
-initSection("Endlag 7 --> 10.
-Damage 6 --> 4.
-Hitbox size reduced.");
-initHeader("NAir - Nerfs, Adjustments");
-initSection("Final hit damage 5 --> 2.
-Final hit knockback growth 0.2 --> 0.4.
-Startup 4 --> 8.
-Endlag 7 --> 8.
-Landing lag 4 --> 5.");
-initHeader("FAir - Nerfs");
-initSection("Startup 4 --> 10.
-Endlag 8 --> 12.
-Landing lag 6 --> 7.
-Angle 30 --> 40.
-Base hitpause 6 --> 11.
-Knockback growth 0.25 --> 0.4.");
-initHeader("BAir - Nerfs");
-initSection("Endlag 7 --> 9.
-Landing lag 4 --> 7.
-Angle 30 --> 40.
-Base hitpause 6 --> 11.
-Knockback growth 0.25 --> 0.4.");
-initHeader("UAir - Nerfs");
-initSection("Damage 5 --> 2.
-Endlag 6 --> 9.");
-initHeader("DAir - Nerfs");
-initSection("Startup 9 --> 12.
-Landing lag 4 --> 9.
-Damage 18 --> 10.
-Base knockback 10 --> 7.
-Knockback growth 1.0 --> 0.8.");
-initHeader("FStrong - Nerfs");
-initSection("Damage 10 --> 8.
-Startup 12 --> 14.");
-initHeader("UStrong - Nerfs");
-initSection("Startup 7 --> 13.
-Knockback growth 1.2 --> 1.1.
-Base hitpause 8 --> 12.
-Hitpause growth 0.5 --> 0.6.");
-initHeader("DStrong - Nerfs");
-initSection("Damage 11 --> 9.
-Knockback growth 1.3 --> 0.65.
-Base hitpause 7 --> 10.");
-
-initPatch("About Sandbert", "");
-initWords("Sandbert was originally released as an overpowered April Fools' joke character, and was later used as a template Steam Workshop character - as an example of how to create a custom fighter.");
-initWords("This version of Sandbert, in addition to serving as the template for fighters that use the MunoPhone Touch, also features touched-up animations and a major balance patch.");
-initHeader("Originally developed by");
-initSection("Dan Fornace and/or his team of RoA developers");
-initHeader("Animation and balance edits by");
-initSection("Muno - byMuno.com");
-initHeader("Additional SFX from");
-initSection("Dragon Ball FighterZ");
-initHeader("Compatible with");
-initSection("Trummel & Alto, Otto, Steve, Link, Goku");
-
-// Recommended template for non-Sandbert characters (delete the other patches):
-
-/*
-
-// other patches go here...
-
-initPatch("1.0", "42 Shmebruary, 2021"); // (replace the date lol)
 initHeader("General");
 initSection("The character was released.");
 
-initPatch("About CHARACTER NAME", "");
+initPatch("About Goku", "");
+initHeader("Original IP");
+initSection("The owners of Dragon Ball");
 initHeader("Character by");
-initSection("your name here");
+initSection("Muno - byMuno.com");
+initHeader("Moveset concept by");
+initSection("Doctor Flux");
 initHeader("SFX from");
-initSection("any places you got sfx (or other assets)");
+initSection("Dragon Ball FighterZ");
 initHeader("Compatible with");
-initSection("Trummel & Alto, Otto, Steve, Link");
-
-*/
+initSection("Abyss Runes, Trummel & Alto, Otto, Steve, Link, Kirby, Final Smash Buddy");
 
 
 
@@ -475,9 +485,8 @@ zero".
 
 #define CORE_cheats
 
-CHEAT_FLY		= initCheat("Fly", [0, 1], ["Off", "On"], "Take flight. So balanced
-
-(hold shield to not fly)");
+CHEAT_KI		= initCheat("Infinite Ki Meter", [0, 1], ["Off", "On"], "Force the Ki Meter to always be full, useful for testing SSJ combos.");
+CHEAT_TRAILER	= initCheat("Trailer Mode", [0, 1], ["Off", "On"], "Disable the Ki Meter on the HUD, to help get cleaner clips for trailers or videos.");
 
 
 
@@ -605,13 +614,10 @@ SPK_ECHO: Tempo
 SPK_MINE: Steve (i dont normally use this one... like, what is he supposed to say?? the funny oof noise? you can if you want)
 SPK_SEGA: Sonic (see above)
 
-Codec speaker expressions:
-https://pastebin.com/qTLnsNFY
-
 Codec gimmicks:
 there aren't any
 
-Page gimmicks:
+Page gimmick handles:
 GIM_CHOMP			make the enemy ftilt
 GIM_CLONE 			display 2 speakers
 GIM_LAUGH_TRACK		play the funny haha sound
@@ -626,16 +632,23 @@ GIM_COLOR			textbox sprite index	is set to the value of the	spr_custom_trummel_c
 To use multiple gimmicks on a single page, MULTIPLY them together.
 */
 
-// Custom speaker setup - use 1, 2, 3, 4, ... for the index.
-SPK_SAND = initSpeaker(1, "Sandbert", sprite_get("_pho_example_speaker"));
-SPK_TWIN = initSpeaker(2, "Sandbert's evil twin", sprite_get("_pho_example_speaker"));
-
 initCodec(0); // this should just always be 0, because there are no codec gimmicks
-initCodecPage(SPK_TRUM, 0, 0, "wow is that sandbert with a phone");
-initCodecPage(SPK_ALTO, 4, 0, "UNBLOCK ME ON FACEBOOK, COWARD");
-initCodecPage(SPK_SAND, 0, GIM_COLOR * GIM_LAUGH_TRACK, "no"); // this page uses the custom speaker
-
-spr_custom_trummel_color = c_red;
+initCodecPage(SPK_ALTO, 3, 0, "Hey! It's him! Goku!");
+initCodecPage(SPK_TRUM, 0, 0, "TRUE");
+initCodecPage(SPK_OTTO, 0, 0, "This guy's not to be messed around with, you know.");
+initCodecPage(SPK_OTTO, 1, 0, "He's a seasoned fighter, with experience against interdimensional threats.");
+initCodecPage(SPK_ALTO, 2, 0, "Including the... ''God of Destruction'' Beerus? Goodness.");
+initCodecPage(SPK_TRUM, 0, 0, "dbz doesnt mess around huh");
+initCodecPage(SPK_CODA, 0, 0, "He's got a lot to show for it in Rivals, too.");
+initCodecPage(SPK_CODA, 0, 0, "Goku can transform into one of several Super Saiyan forms, which all act the same.");
+initCodecPage(SPK_CODA, 0, 0, "Super Saiyan Goku gets access to powerful cancel combos and more powerful Strong Attacks, plus a giant Spirit Bomb.");
+initCodecPage(SPK_OTTO, 0, 0, "The other form is his red-colored Kaioken state, which he can access whenever he wants for a small damage boost.");
+initCodecPage(SPK_ECHO, 2, 0, "That meter fills up super slowly as he deals damage... I bet he can probably only use it once per match!");
+initCodecPage(SPK_CODA, 1, 0, "Yes... but Goku can push his limits with Kaioken to fill it early, at the cost of self-damage.");
+initCodecPage(SPK_ALTO, 9, 0, "So it's like a gamble! Maybe we can exploit that if he gets cocky.");
+initCodecPage(SPK_OTTO, 9, 0, "Goku also becomes more vulnerable to launches when in Super Saiyan form.");
+initCodecPage(SPK_ALTO, 4, 0, "We have our gameplan, then - let him push his luck, and then punish him for it!");
+initCodecPage(SPK_TRUM, 0, 0, "hope its more punishable than buster chord");
 
 // Otto bobblehead.
 otto_bobblehead_sprite = sprite_get("_pho_example_bobble_head");
@@ -644,10 +657,10 @@ otto_bobblehead_sprite = sprite_get("_pho_example_bobble_head");
 otto_bobblebody_sprite = sprite_get("_pho_example_bobble_body");
 
 // Steve death message.
-steve_death_message = "Steve got canceled on Twitter";
+steve_death_message = "Steve's power level was too low";
 
 // Link spear. (determines which spear your char will drop the first time)
-link_spear_drop = 3;
+link_spear_drop = 1;
 
 /*
 Spear IDs:
@@ -661,25 +674,6 @@ Spear IDs:
 7: Thunderspear
 8: Guardian Spear
 */
-
-// Palutena's Guidance (for RuberCuber's Pit character)
-// Works kind of similarly to Trummel codecs.
-// initCodecPagePit(speaker, expression, voice, text);
-// List of expressions and voice clips: https://pastebin.com/wsz22ZwJ
-
-initCodecPit();
-initCodecPagePit(SPK_PIT,	3,	0,	"Hey, it's Sandbert!");
-initCodecPagePit(SPK_PIT,	1,	6,	"...Isn't he a bit above my power level?");
-initCodecPagePit(SPK_PALU,	0,	3,	"Actually, this version of Sandbert has received a lot of nerfs to his damage and frame data.");
-initCodecPagePit(SPK_PALU,	0,	2,	"He can't even cancel his USpecial or end it early anymore!");
-initCodecPagePit(SPK_VIR,	5,	1,	"But yes, Pit, he IS still above your power level.");
-initCodecPagePit(SPK_PIT,	6,	0,	"Pssh, sounds like a pushover to me.");
-initCodecPagePit(SPK_PALU,	0,	4,	"Don't be so sure - despite the nerfs, his power and attack speed are still a force to be reckoned with.");
-initCodecPagePit(SPK_PALU,	0,	2,	"Also, he has the same MunoPhone as you do - so he'll be well-versed in his frame data and combos.");
-initCodecPagePit(SPK_VIR,	6,	4,	"Maybe you should turn on some Cheats for this fight, Pit?");
-initCodecPagePit(SPK_PALU,	0,	2,	"No, I'm sure he'll be fine.");
-initCodecPagePit(SPK_PALU,	2,	5,	"...As long as he avoids the Kamehameha.");
-initCodecPagePit(SPK_PIT,	4,	1,	"The WHAT?!?");
 
 
 
@@ -766,8 +760,8 @@ array_push(phone.currently_edited_obj.objs, {
 	sprite: obj_sprite,
 	frame: obj_frame,
 	align: fa_center,
-	xscale: 1,
-	yscale: 1,
+	xscale: 2,
+	yscale: 2,
 	uses_shader: 1,
 	color: c_white,
 	alpha: 1,
@@ -859,26 +853,3 @@ trummel_speakers[idx] = {
 };
 
 return idx * -1;
-
-#define initCodecPit()
-
-with oPlayer if "ruber_pit" in self {
-	load_codecs = true;
-}
-
-pit_codecs = [];
-
-var new_cdc = {
-	pages: []
-};
-
-array_push(pit_codecs, new_cdc);
-
-#define initCodecPagePit(cd_speaker, cd_expression, cd_sfx, cd_text)
-var new_page = {
-	speaker: cd_speaker,
-	expression: cd_expression,
-	sfx: cd_sfx,
-	text: cd_text
-};
-array_push(pit_codecs[array_length(pit_codecs) - 1].pages, new_page);

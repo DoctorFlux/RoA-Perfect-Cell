@@ -37,10 +37,7 @@ phone_window_end
 		? 1.5 : 1))
 	...which is a fancy way of saying "the last frame of the current attack
 	window." You can use this to run code at the end of a window, e.g.
-	
-	if (window_timer == phone_window_end){
-		print("this is being run at the END of this window");
-	}
+		if (window_timer == window_end)
 
 phone_playtest
 	This is true if you are playtesting the character on the CSS, and false
@@ -50,11 +47,6 @@ phone_practice
 	This is true if you are playing in Practice Mode, and false otherwise. It
 	also gets set to false when the MunoPhone is powered off, and is always
 	false for CPU players.
-
-phone_game_over
-	This is true if all of the players except for one team are in the PS_DEAD
-	state, which means that the game has ended and is in slow-mo or	whatever.
-	(Might act weirdly on custom stages with weird rules, who knows)
 
 phone_stopped_sounds
 	This is an array that stores the instance IDs of played sounds, empty by
@@ -128,7 +120,7 @@ phone_lightweight
 	help optimize performance a little bit if you don't need any of these
 	features.
 	
-	Recommended if you're porting the phone to an existing character... I mean,
+	Recommended if you're porting the phone to an existing character.... I mean,
 	you might as well.
 	
 	Disables:
@@ -144,7 +136,6 @@ phone_lightweight
 	- phone_landing
 	- automatically enabling Fast Graphics
 	- phone_dust_query
-	- phone_game_over
 
 phone_fast
 	This is true if the Fast Graphics setting is enabled (either manually or
@@ -166,6 +157,18 @@ phone_invul_override
 	AG_MUNO_WINDOW_INVUL during that frame, allowing you to manually set soft
 	armor, super armor, and invul even if you have set AG_MUNO_WINDOW_INVUL for
 	the attack.
+
+phone_blastzone_r
+	This stores the X coordinate of the right blastzone.
+
+phone_blastzone_l
+	This stores the X coordinate of the left blastzone.
+
+phone_blastzone_t
+	This stores the Y coordinate of the top blastzone.
+
+phone_blastzone_b
+	This stores the Y coordinate of the bottom blastzone.
 
 phone_arrow_cooldown
 	This is the cooldown value for any attacks which use the
@@ -197,6 +200,12 @@ phone_frozen_damage
 
 phone
 	This is the variable for the phone object.
+	
+spr_[VARIOUS]
+	The variables starting with spr_ contain sprite indexes obtained with
+	sprite_get(). This allows you to autocomplete the name in GMEdit, and also
+	helps optimise things by calling sprite_get() only once. You can do:
+		draw_sprite(spr_nspecial, 0, x, y);
 
 phone_cheats
 	This is the array which stores the current values of Cheats.
@@ -220,14 +229,6 @@ phone_using_invul
 phone_char_ided
 	This is an internal variable used to track whether or not the phone has
 	given a muno_char_id to the other characters in the match.
-
-phone_blastzone_l
-phone_blastzone_r
-phone_blastzone_t
-phone_blastzone_b
-	These vars store the x/y coords of the left/right/top/bottom blastzones.
-	Made obsolete by get_stage_data() macros, but included for backwards
-	compatibility.
 
 */
 
@@ -371,6 +372,6 @@ HG_MUNO_OBJECT_LAUNCH_ANGLE
 ...That was a lot.
 
 If you're a big brain coder and have made your OWN custom AG_s or HG_s, there's
-a chance that their indexes overlap. To resolve this, see user_event15.gml.
+a chance that their indexes overlap. To resolve this, see user_event14.gml.
 
 */

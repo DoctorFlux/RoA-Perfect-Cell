@@ -6,16 +6,19 @@ set_attack_value(AT_FSPECIAL, AG_AIR_SPRITE, sprite_get("fspecial"));
 set_attack_value(AT_FSPECIAL, AG_HURTBOX_SPRITE, sprite_get("fspecial_hurt"));
 
 set_window_value(AT_FSPECIAL, 1, AG_WINDOW_LENGTH, 10);
-set_window_value(AT_FSPECIAL, 1, AG_WINDOW_ANIM_FRAMES, 4);
-set_window_value(AT_FSPECIAL, 1, AG_WINDOW_GOTO, 2);
+set_window_value(AT_FSPECIAL, 1, AG_WINDOW_ANIM_FRAMES, 2);
+set_window_value(AT_FSPECIAL, 1, AG_WINDOW_HAS_SFX, 1);
+set_window_value(AT_FSPECIAL, 1, AG_WINDOW_SFX, asset_get("sfx_may_arc_cointoss"));
+set_window_value(AT_FSPECIAL, 1, AG_WINDOW_SFX_FRAME, 8);
 
 set_window_value(AT_FSPECIAL, 2, AG_WINDOW_LENGTH, 5);
-set_window_value(AT_FSPECIAL, 2, AG_WINDOW_ANIM_FRAMES, 23);
-set_window_value(AT_FSPECIAL, 2, AG_WINDOW_ANIM_FRAME_START, 4);
+set_window_value(AT_FSPECIAL, 2, AG_WINDOW_ANIM_FRAMES, 1);
+set_window_value(AT_FSPECIAL, 2, AG_WINDOW_ANIM_FRAME_START, 2);
 
+set_window_value(AT_FSPECIAL, 3, AG_WINDOW_TYPE, 7);
 set_window_value(AT_FSPECIAL, 3, AG_WINDOW_LENGTH, 15);
-set_window_value(AT_FSPECIAL, 3, AG_WINDOW_ANIM_FRAMES, 4);
-set_window_value(AT_FSPECIAL, 3, AG_WINDOW_ANIM_FRAME_START, 27);
+set_window_value(AT_FSPECIAL, 3, AG_WINDOW_ANIM_FRAMES, 3);
+set_window_value(AT_FSPECIAL, 3, AG_WINDOW_ANIM_FRAME_START, 3);
 
 set_num_hitboxes(AT_FSPECIAL, 1);
 

@@ -1,25 +1,45 @@
-// MunoPhone Touch code - don't touch
-// should be at TOP of file
 muno_event_type = 4;
 user_event(14);
 
-
-
-if phone_attacking && attack == AT_TAUNT_2{
+if funny_broken_mode{
 	shader_start();
-	draw_sprite_ext(sprite_get("handbert"), 0, x + (32 + ease_quintOut(256, 0, window_timer, phone_window_end)) * spr_dir, y - 22, 2 * -spr_dir, 2, 0, c_white, 1);
+	draw_sprite_ext(sprite_index, image_index, x + draw_x, y + draw_y, image_xscale * 2, image_yscale * 2, spr_angle, c_white, 1);
 	shader_end();
 }
 
-if(state == PS_ROLL_FORWARD || state == PS_ROLL_BACKWARD) && state_timer <= 11{
-	draw_sprite_ext(sprite_get("vfx_afterimage"), (state_timer / 12) * 6, afterimage_x, afterimage_y, spr_dir, 1, 0, c_white, 1);
+
+
+if kaioken{
+	shader_start();
+	draw_sprite_ext(sprite_index, image_index, x + draw_x, y + draw_y, image_xscale * 2, image_yscale * 2, spr_angle, kaioken_red_dark, 0.5);
+	shader_end();
 }
 
-// code for kamehameha
+if draw_indicator && ssj{
+	meterDraw(x, y - char_height - hud_offset - 75 + (false && phone_cheats[cheat_hide_hud]) * 40, 40, 8, ssjs[ssj].color_dark, clamp(ki_meter / ki_max, 0, 1), 1, 1, true);
+}
+
+if phone_attacking && attack == 49 && window == clamp(window, 2, 4){
+	shader_start();
+	var dx = x;
+	var dy = y - 480;
+	if window == 2{
+		dy -= ease_sineOut(200, 0, window_timer, phone_window_end);
+	}
+	if window == 4 && image_index == 5{
+		var prog = image_index - 5;
+		dx += 40 * prog * spr_dir;
+		dy += 40 * prog;
+	}
+	draw_sprite(sprite_get("super_spirit_bomb"), 0, dx, dy);
+	shader_end();
+}
+
+
 
 if phone_attacking && attack == AT_NSPECIAL{
 	if window == clamp(window, 4, 6){
-		// shader_start();
+		shader_start();
 		
 		if beam_clash_buddy != noone && state_timer % 60 < 30{
 			textDraw(x, y + 16, "fName", c_white, 100, 1000, fa_center, 1, true, 1, "Mash Special!!", false);
@@ -39,12 +59,12 @@ if phone_attacking && attack == AT_NSPECIAL{
 		
 		switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
 			case 1: // down
-				x1 = x + 66 * spr_dir;
+				x1 = x + 74 * spr_dir;
 				y1 = y - 6;
 				break;
 			case -1: // up
 				x1 = x + 60 * spr_dir;
-				y1 = y - 68;
+				y1 = y - 72;
 				break;
 		}
 		
@@ -63,33 +83,44 @@ if phone_attacking && attack == AT_NSPECIAL{
 		draw_sprite_ext(spr1, strength * 2 + frame, x1, y1, 1, 1, angle, c_white, 1);
 		draw_sprite_ext(spr3, strength * 2 + frame, x1 + lengthdir_x(length, angle), y1 + lengthdir_y(length, angle), 1, 1, angle, c_white, 1);
 		
-		// shader_end();
-	}
-	else if window == 7{
-		var x1 = x + 72 * spr_dir;
-		var y1 = y - 40 + lengthdir_y(32, beam_angle);
-		
-		switch((abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15))) * sign(lengthdir_y(1, beam_angle))){
-			case 1: // down
-				x1 = x + 66 * spr_dir;
-				y1 = y - 6;
-				break;
-			case -1: // up
-				x1 = x + 60 * spr_dir;
-				y1 = y - 68;
-				break;
-		}
-		
-		var length = beam_length / 2;
-		var frame = min(floor(6 * window_timer / phone_window_end), 5);
-		var angle = beam_angle;
-		
-		x1 -= lengthdir_x(40, angle)
-		y1 -= lengthdir_y(40, angle)
-		
-		draw_sprite_ext(sprite_get("nspecial_beam_fade"), frame, x1, y1, length, 1, angle, c_white, 1)
+		shader_end();
 	}
 }
+
+
+
+if phone_attacking && attack == AT_USPECIAL && window == 1{
+	shader_start();
+	draw_sprite_ext(sprite_get("uspecial_arrow"), (image_index != clamp(image_index, 1, 4)), x, y - 28, 1, 1, uspecial_direction_arr[max(0, array_length(uspecial_direction_arr) - 4)], c_white, 1);
+	shader_end();
+	// if image_index > 0 && "uspecial_dist" in self draw_sprite(sprite_get("vfx_sparkle"), image_index - 1, x + lengthdir_x(uspecial_dist + 32, uspecial_direction_arr[max(0, array_length(uspecial_direction_arr) - 4)]), y - 32 + lengthdir_y(uspecial_dist + 32, uspecial_direction_arr[max(0, array_length(uspecial_direction_arr) - 4)]));
+}
+
+if phone_attacking && attack == AT_NSPECIAL && window == clamp(window, 2, 3) && beam_juice > 30 + 60 * (ssj > 0) && abs(lengthdir_y(1, beam_angle)) > 0.1{
+	shader_start();
+	draw_sprite_ext(sprite_get("uspecial_arrow"), 0, x, y - 40, 1, 1, beam_angle, c_white, 1);
+	shader_end();
+}
+
+
+
+#define meterDraw(center, top, width, height, color, amount, alpha, alpha2, border)
+
+if width < 6 return;
+
+var left = center - width * 0.5;
+
+draw_set_alpha(alpha);
+
+rectDraw(left, top, width, height, c_black);
+rectDraw(left + 2, top + 2, width - 4, height - 4, make_color_rgb(60, 60, 60));
+if border rectDraw(left + 2, top + 2, round(min(((width - 4) * amount / 2) * 2 + 2, width - 3) / 2) * 2 - 1 + floor(amount), height - 4, c_white);
+
+draw_set_alpha(alpha * alpha2);
+
+rectDraw(left + 2, top + 2, round(((width - 4) * amount / 2)) * 2 - 1 + floor(amount), height - 4, color);
+
+draw_set_alpha(1);
 
 
 

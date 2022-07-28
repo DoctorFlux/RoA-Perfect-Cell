@@ -1,122 +1,154 @@
-/*
- 
-Muno's easy color system TM.
+// DEFAULT COLOR
 
-TLDR instructions at the bottom of this comment block, but you should read the
-whole thing so you know what this does.
+// Green
+set_color_profile_slot( 0, 0, 74, 136, 34 );
+set_color_profile_slot_range( 0, 21, 19, 43 );
 
+// Black/Gray
+set_color_profile_slot( 0, 1, 25, 29, 35 );
+set_color_profile_slot_range( 1, 7, 7, 46 );
 
- 
-This allows you to easily use RGB hex codes to define your colors. You can get
-these quickly by changing the eyedropper in Aseprite (etc) to use RGB color,
-then the hex will show in the color area at the corner of the screen. By doing
-this, you can quickly swap between Aseprite eyedropper and GMEdit to code in
-palettes you've drawn, which greatly reduces tedium.
- 
-(By default, GML uses Blue, Green, Red instead of Red, Green, Blue for hex
-colors. This template allows you to use RGB instead of BGR. You're welcome!)
- 
-The system is optimized for the color setup style seen in Liz and adopted by me
-for chars like Coda, where each shade is its OWN individual color (as opposed to
-normal Rivals, where shades of the same color are grouped together). This allows
-for better artistic control over the shades for alt costumes, notably fixing
-issues with hue shifting.
- 
-The limitation is that only 8 separate colors can be registered in Rivals's
-system. There's limited real estate, and having each shade separately uses more
-of it. In light of this, the template ALSO supports ranges - just define them
-using set_color_profile_slot_range(), like normal (example below). By default,
-all 3 numbers of the range (H, S, V) are set to 1 by rangeSet().
+// Blue
+set_color_profile_slot( 0, 2, 0, 38, 255 );
+set_color_profile_slot_range( 2, 1, 61, 1 );
 
-Using this system shouldn't affect any other color-related code, such as code
-to change colors mid-match. It's just a different front-end for the normal
-color system.
- 
-Obviously, this is example is for Sandbert's colors. For the alt costumes, I
-edited the shading color (except for the grey alt), to demonstrate the added
-control that the separate-shade method gives you. I think the shaded color
-only actually appears in the CSS artwork, results screen, and so on. See if you
-can notice the hue-shifting and saturation-shifting added.
+// Purple
+set_color_profile_slot( 0, 3, 113, 77, 145 );
+set_color_profile_slot_range( 3, 1, 1, 19 );
+
+// Yellow
+set_color_profile_slot( 0, 4, 201, 158, 29 );
+set_color_profile_slot_range( 4, 3, 32, 19 );
+
+// Skin
+set_color_profile_slot( 0, 5, 234, 234, 234 );
+set_color_profile_slot_range( 5, 1, 1, 1 );
+
+// Skin2
+set_color_profile_slot( 0, 6, 181, 181, 196 );
+set_color_profile_slot_range( 6, 1, 1, 1 );
+
+//  Eyes
+set_color_profile_slot( 0, 7, 230, 117, 151 );
+set_color_profile_slot_range( 7, 1, 1, 1 );
 
 
+// ALTERNATE COLORS
+set_num_palettes( 12 );
 
-If you prefer the traditional RoA system for whatever reason, you're free to
-replace this whole file without breaking any kind of MunoPhone functionality.
+// Cell jr.
+set_color_profile_slot( 1, 0, 34, 54, 136 ); //Green
+set_color_profile_slot( 1, 1, 25, 29, 35 ); //Black/Gray
+set_color_profile_slot( 1, 2, 25, 29, 35 ); //Blue
+set_color_profile_slot( 1, 3, 113, 77, 145 ); //Purple
+set_color_profile_slot( 1, 4, 201, 158, 29 ); //Yellow
+set_color_profile_slot( 1, 5, 234, 234, 234 ); //Skin
+set_color_profile_slot( 1, 6, 181, 181, 196 ); //Skin2
+set_color_profile_slot( 1, 7, 230, 117, 151 ); // Eyes
+
+// Frieza
+set_color_profile_slot( 2, 0, 181, 181, 196 ); //Green
+set_color_profile_slot( 2, 1, 181, 181, 196 ); //Black/Gray
+set_color_profile_slot( 2, 2, 113, 77, 145 ); //Blue
+set_color_profile_slot( 2, 3, 113, 77, 145 ); //Purple
+set_color_profile_slot( 2, 4, 201, 158, 29 ); //Yellow
+set_color_profile_slot( 2, 5, 234, 234, 234 ); //Skin
+set_color_profile_slot( 2, 6, 181, 181, 196 ); //Skin2
+set_color_profile_slot( 2, 7, 230, 117, 151 ); // Eyes
+
+// Golden
+set_color_profile_slot( 3, 0, 201, 158, 29 ); //Green
+set_color_profile_slot( 3, 1, 25, 29, 35 ); //Black/Gray
+set_color_profile_slot( 3, 2, 25, 29, 35 ); //Blue
+set_color_profile_slot( 3, 3, 113, 77, 145 ); //Purple
+set_color_profile_slot( 3, 4, 201, 158, 29 ); //Yellow
+set_color_profile_slot( 3, 5, 113, 77, 145 ); //Skin
+set_color_profile_slot( 3, 6, 77, 52, 99 ); //Skin2
+set_color_profile_slot( 3, 7, 230, 117, 151 ); // Eyes
+
+// Buu
+set_color_profile_slot( 4, 0, 255, 133, 169 ); //Green
+set_color_profile_slot( 4, 1, 234, 234, 234 ); //Black/Gray
+set_color_profile_slot( 4, 2, 234, 234, 234 ); //Blue
+set_color_profile_slot( 4, 3, 113, 77, 145 ); //Purple
+set_color_profile_slot( 4, 4, 201, 158, 29 ); //Yellow
+set_color_profile_slot( 4, 5, 230, 117, 151 ); //Skin
+set_color_profile_slot( 4, 6, 173, 88, 114 ); //Skin2
+set_color_profile_slot( 4, 7, 255, 0, 0 ); // Eyes
+
+// Hit
+set_color_profile_slot( 5, 0, 113, 77, 145 ); //Green
+set_color_profile_slot( 5, 1, 62, 76, 89 ); //Black/Gray
+set_color_profile_slot( 5, 2, 62, 76, 89 ); //Blue
+set_color_profile_slot( 5, 3, 113, 77, 145 ); //Purple
+set_color_profile_slot( 5, 4, 217, 142, 252 ); //Yellow
+set_color_profile_slot( 5, 5, 217, 142, 252 ); //Skin
+set_color_profile_slot( 5, 6, 171, 112, 199 ); //Skin2
+set_color_profile_slot( 5, 7, 255, 0, 0 ); // Eyes
+
+// Jiren
+set_color_profile_slot( 6, 0, 194, 0, 0 ); //Green
+set_color_profile_slot( 6, 1, 25, 29, 35 ); //Black/Gray
+set_color_profile_slot( 6, 2, 25, 29, 35 ); //Blue
+set_color_profile_slot( 6, 3, 234, 234, 234 ); //Purple
+set_color_profile_slot( 6, 4, 234, 234, 234 ); //Yellow
+set_color_profile_slot( 6, 5, 234, 234, 234 ); //Skin
+set_color_profile_slot( 6, 6, 181, 181, 196 ); //Skin2
+set_color_profile_slot( 6, 7, 230, 117, 151 ); // Eyes
+
+// Cell Max
+set_color_profile_slot( 7, 0, 255, 0, 0 ); //Green
+set_color_profile_slot( 7, 1, 25, 29, 35 ); //Black/Gray
+set_color_profile_slot( 7, 2, 25, 29, 35 ); //Blue
+set_color_profile_slot( 7, 3, 113, 77, 145 ); //Purple
+set_color_profile_slot( 7, 4, 255, 0, 0 ); //Yellow
+set_color_profile_slot( 7, 5, 160, 201, 86 ); //Skin
+set_color_profile_slot( 7, 6, 74, 136, 34 ); //Skin2
+set_color_profile_slot( 7, 7, 255, 0, 0 ); // Eyes
+
+// Trans
+set_color_profile_slot( 8, 0, 117, 221, 230 ); //Green
+set_color_profile_slot( 8, 1, 239, 120, 168 ); //Black/Gray
+set_color_profile_slot( 8, 2, 239, 120, 168 ); //Blue
+set_color_profile_slot( 8, 3, 113, 77, 145 ); //Purple
+set_color_profile_slot( 8, 4, 201, 158, 29 ); //Yellow
+set_color_profile_slot( 8, 5, 234, 234, 234 ); //Skin
+set_color_profile_slot( 8, 6, 181, 181, 196 ); //Skin2
+set_color_profile_slot( 8, 7, 230, 117, 151 ); // Eyes
+
+// Manga
+set_color_profile_slot( 9, 0, 184, 184, 184 ); //Green
+set_color_profile_slot( 9, 1, 0, 0, 0 ); //Black/Gray
+set_color_profile_slot( 9, 2, 0, 0, 0 ); //Blue
+set_color_profile_slot( 9, 3, 56, 56, 56 ); //Purple
+set_color_profile_slot( 9, 4, 255, 255, 255 ); //Yellow
+set_color_profile_slot( 9, 5, 255, 255, 255 ); //Skin
+set_color_profile_slot( 9, 6, 181, 181, 181 ); //Skin2
+set_color_profile_slot( 9, 7, 181, 181, 181 ); // Eyes
+
+// GameBoy
+set_color_profile_slot( 10, 0, 167, 186, 74 ); //Green
+set_color_profile_slot( 10, 1, 83, 122, 62 ); //Black/Gray
+set_color_profile_slot( 10, 2, 83, 122, 62 ); //Blue
+set_color_profile_slot( 10, 3, 83, 122, 62 ); //Purple
+set_color_profile_slot( 10, 4, 167, 186, 74 ); //Yellow
+set_color_profile_slot( 10, 5, 211, 226, 154 ); //Skin
+set_color_profile_slot( 10, 6, 211, 226, 154 ); //Skin2
+set_color_profile_slot( 10, 7, 83, 122, 62 ); // Eyes
+
+// Abyss
+set_color_profile_slot( 11, 0, 80, 61, 95 ); //Green
+set_color_profile_slot( 11, 1, 169, 63, 201 ); //Black/Gray
+set_color_profile_slot( 11, 2, 169, 63, 201 ); //Blue
+set_color_profile_slot( 11, 3, 113, 77, 145 ); //Purple
+set_color_profile_slot( 11, 4, 80, 61, 95 ); //Yellow
+set_color_profile_slot( 11, 5, 86, 84, 146 ); //Skin
+set_color_profile_slot( 11, 6, 50, 48, 95 ); //Skin2
+set_color_profile_slot( 11, 7, 255, 255, 0 ); // Eyes
 
 
-
-TLDR HOW TO
-- Replace the hex values and labels in the rangeSet() section with your own
-  character's colors, in RGB hex format.
-- If needed, change the ranges in the set_color_profile_slot_range() section,
-  exactly like normal colors.gml.
-- For each alt, include the colorSet()s and the a++. (just copy and paste)
- 
+/* This is a comment used by that one RoA colors.gml generator tool to store palette data. You can safely keep it in your colors.gml if you plan to re-use the tool later, or safely remove it if you don't.
+=== BEGIN JSON PALETTE ===
+{"formatversion":1,"data":[{"name":"Green","colors":[{"r":160,"g":201,"b":86},{"r":74,"g":136,"b":34,"main":true},{"r":10,"g":56,"b":7},{"r":5,"g":28,"b":3}]},{"name":"Black/Gray","colors":[{"r":117,"g":130,"b":151},{"r":45,"g":56,"b":67},{"r":25,"g":29,"b":35,"main":true}]},{"name":"Blue","colors":[{"r":0,"g":38,"b":255,"main":true},{"r":50,"g":81,"b":255},{"r":153,"g":168,"b":255}]},{"name":"Purple","colors":[{"r":113,"g":77,"b":145,"main":true},{"r":77,"g":52,"b":99}]},{"name":"Yellow","colors":[{"r":248,"g":219,"b":112},{"r":201,"g":158,"b":29,"main":true}]},{"name":"Skin","colors":[{"r":234,"g":234,"b":234,"main":true}]},{"name":"Skin2","colors":[{"r":181,"g":181,"b":196,"main":true}]},{"name":" Eyes","colors":[{"r":230,"g":117,"b":151,"main":true}]}]}
+=== END JSON PALETTE ===
 */
- 
- 
- 
-// default palette
- 
-// my personal naming scheme is (S) for the dark shade of a color, and (R) for a
-// color which uses ranges to group shades together.
- 
-rangeSet(0, $ffffff); //White
-rangeSet(1, $c0c0c0); //White (S)
-//repeat up to 7... (so 8 total bc it starts from 0)
- 
- 
- 
-// if needed, you can change the ranges to non-1 numbers here, just like normal.
-// this example is just taken from coda's colors, so it doesn't do anything for
-// sandbert...
- 
-set_color_profile_slot_range(6, 10, 15, 10);
-set_color_profile_slot_range(7, 20, 20, 20);
- 
- 
- 
-// each palette below. just copy-paste the colorSet()s AND the a++; to add more
- 
-var a = 1;
-
-// blue
-colorSet(a, 0, $9d9fff); //White
-colorSet(a, 1, $6952c0); //White (S)
-//repeat up to 7...
-a++;
- 
-// red
-colorSet(a, 0, $ff4b4b); //White
-colorSet(a, 1, $ac1535); //White (S)
-a++;
- 
-// green
-colorSet(a, 0, $78ff78); //White
-colorSet(a, 1, $30a153); //White (S)
-a++;
- 
-// grey
-colorSet(a, 0, $b4b4b4); //White
-colorSet(a, 1, $757575); //White (S)
-a++;
- 
-// yellow
-colorSet(a, 0, $ebf845); //White
-colorSet(a, 1, $c48e1a); //White (S)
-a++;
- 
-set_num_palettes(a); // automatically sets the number for you
- 
- 
- 
-#define rangeSet(sha, col) // Auto-sets ranges to 1. Translates GML's asinine BGR hex colors to RGB.
- 
-set_color_profile_slot(0, sha, color_get_blue(col), color_get_green(col), color_get_red(col));
-set_color_profile_slot_range(sha, 1, 1, 1);
- 
- 
- 
-#define colorSet(alt, sha, col) // Streamlines color setup. Translates BRG --> RGB.
- 
-set_color_profile_slot(alt, sha, color_get_blue(col), color_get_green(col), color_get_red(col));

@@ -105,7 +105,7 @@ instance_create(x, y, "obj_article_solid");
 phone = {
 	
 	// version
-	firmware: 5,
+	firmware: 4,
 	
 	// dev-end config
 	uses_shader: 0,
@@ -562,8 +562,9 @@ shader_end();
 // obsoleted by patch lol
 // textDraw(x + 220, y + 210, "fName", c_white, 100, 1000, fa_right, 1, false, 0.25, "char ver. " + string(get_char_info(player, INFO_VER_MAJOR)) + "." + string(get_char_info(player, INFO_VER_MINOR)), false);
 
-draw_sprite_ext(sprite_get("_pho_icon"), 0, x + 6, y + 42, 2, 2, 0, c_white, 1);
-
+if player != 0{ // player online
+	draw_sprite_ext(sprite_get("_pho_icon"), 0, x + 6, y + 42, 2, 2, 0, c_white, 1);
+}
 // Alt costume
 
 var alt_cur = get_player_color(player);
