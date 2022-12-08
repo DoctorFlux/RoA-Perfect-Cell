@@ -1,3 +1,7 @@
+var phone_hud_hidden = !(get_local_setting(SET_HUD_SIZE) || get_local_setting(SET_HUD_NAMES));
+var phone_attacking = state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND
+var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));
+
 if phone_attacking && attack == AT_NSPECIAL{if window == 7{
 		var x1 = x + 72 * spr_dir;
 		var y1 = y - 40 + lengthdir_y(32, beam_angle);
@@ -45,7 +49,7 @@ else if ssj{
 gpu_set_alphatestenable(true);
 gpu_set_fog(1, col, 0, 1);
 
-for (i = phone_fast; i < 2; i++){
+for (i = 0; i < 2; i++){
 	var rand_x = random_func(i + 00, 5, true) - 2;
 	var rand_y = random_func(i + 10, 5, true) - 2;
 	

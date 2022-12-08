@@ -1,5 +1,10 @@
-muno_event_type = 4;
-user_event(14);
+var phone_hud_hidden = !(get_local_setting(SET_HUD_SIZE) || get_local_setting(SET_HUD_NAMES));
+var phone_attacking = state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND
+var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));
+if !phone_hud_hidden && draw_indicator{
+	var col = (phone_arrow_cooldown && !(phone_arrow_cooldown - 1 < 25 && (phone_arrow_cooldown - 1) % 10 >= 5)) ? phone_darkened_player_color : get_player_hud_color(player);
+	draw_sprite_ext(sprite_get("_pho_cooldown_arrow"), 0, x - 7, y - char_height - hud_offset - 28, 1, 1, 0, col, 1);
+}
 
 if funny_broken_mode{
 	shader_start();
@@ -13,10 +18,6 @@ if kaioken{
 	shader_start();
 	draw_sprite_ext(sprite_index, image_index, x + draw_x, y + draw_y, image_xscale * 2, image_yscale * 2, spr_angle, kaioken_red_dark, 0.5);
 	shader_end();
-}
-
-if draw_indicator && ssj{
-	meterDraw(x, y - char_height - hud_offset - 75 + (false && phone_cheats[cheat_hide_hud]) * 40, 40, 8, ssjs[ssj].color_dark, clamp(ki_meter / ki_max, 0, 1), 1, 1, true);
 }
 
 if phone_attacking && attack == 49 && window == clamp(window, 2, 4){
@@ -87,21 +88,17 @@ if phone_attacking && attack == AT_NSPECIAL{
 	}
 }
 
-
-
-if phone_attacking && attack == AT_USPECIAL && window == 1{
-	shader_start();
-	draw_sprite_ext(sprite_get("uspecial_arrow"), (image_index != clamp(image_index, 1, 4)), x, y - 28, 1, 1, uspecial_direction_arr[max(0, array_length(uspecial_direction_arr) - 4)], c_white, 1);
-	shader_end();
-	// if image_index > 0 && "uspecial_dist" in self draw_sprite(sprite_get("vfx_sparkle"), image_index - 1, x + lengthdir_x(uspecial_dist + 32, uspecial_direction_arr[max(0, array_length(uspecial_direction_arr) - 4)]), y - 32 + lengthdir_y(uspecial_dist + 32, uspecial_direction_arr[max(0, array_length(uspecial_direction_arr) - 4)]));
-}
-
 if phone_attacking && attack == AT_NSPECIAL && window == clamp(window, 2, 3) && beam_juice > 30 + 60 * (ssj > 0) && abs(lengthdir_y(1, beam_angle)) > 0.1{
 	shader_start();
 	draw_sprite_ext(sprite_get("uspecial_arrow"), 0, x, y - 40, 1, 1, beam_angle, c_white, 1);
 	shader_end();
 }
 
+
+//fspecial
+if state == PS_ATTACK_GROUND && attack == AT_FSPECIAL && instance_exists(grabp){
+	draw_sprite_ext(sprite_get("fspecial_vfx"), image_index, grabp.x, grabp.y - grabp.char_height/2, 2 * spr_dir, 2, 0, c_white, 1);
+}
 
 
 #define meterDraw(center, top, width, height, color, amount, alpha, alpha2, border)

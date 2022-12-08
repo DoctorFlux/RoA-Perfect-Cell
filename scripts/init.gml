@@ -416,7 +416,12 @@ fs_char_chosen_final_smash = "custom";
 fs_meter_x = 40;
 fs_meter_y = -28;
 
+//fspecial
+grabp = noone;
+fspec_hb = noone;
 
+//uspecial
+startp = [0, 0];
 
 // Animation Info
 
@@ -480,8 +485,8 @@ of the standing-up animation. Dan Moment
 
 
 // Hurtbox sprites
-hurtbox_spr         = asset_get("ex_guy_hurt_box");
-crouchbox_spr       = asset_get("ex_guy_crouch_box");
+hurtbox_spr = sprite_get("hurt_box")
+crouchbox_spr       = sprite_get("crouch_hurt_box");
 air_hurtbox_spr     = -1; // -1 = use hurtbox_spr
 hitstun_hurtbox_spr = -1; // -1 = use hurtbox_spr
 
@@ -501,6 +506,15 @@ air_dodge_sound     = asset_get("sfx_quick_dodge");
 bubble_x = 0;
 bubble_y = 8;
 
+//misc vars
+phone_arrow_cooldown = 0;
+phone_darkened_player_color = make_color_rgb(
+	color_get_red	(get_player_hud_color(player)) * 0.25,
+	color_get_green	(get_player_hud_color(player)) * 0.25,
+	color_get_blue	(get_player_hud_color(player)) * 0.25
+	);
+phone_blastzone_r = room_width - get_stage_data(SD_X_POS) + get_stage_data(SD_SIDE_BLASTZONE);
+phone_blastzone_l = get_stage_data(SD_X_POS) - get_stage_data(SD_SIDE_BLASTZONE);
 
 
 muno_event_type = 0;

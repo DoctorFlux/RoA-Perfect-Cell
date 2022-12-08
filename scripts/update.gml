@@ -1,3 +1,10 @@
+var phone_hud_hidden = !(get_local_setting(SET_HUD_SIZE) || get_local_setting(SET_HUD_NAMES));
+var phone_attacking = state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND
+var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));
+
+//misc code bits
+if phone_arrow_cooldown > 0 phone_arrow_cooldown--;
+
 if get_player_color(player) == 0 {
 	set_ui_element(UI_HUD_ICON, sprite_get("hud_default_hud"));
 	set_ui_element(UI_HUDHURT_ICON, sprite_get("hud_default_hurt"));
@@ -13,10 +20,8 @@ if get_player_color(player) == 0 {
 	set_ui_element(UI_WIN_SIDEBAR, sprite_get("hud_alt1_result_small"));
 	set_ui_element(UI_WIN_PORTRAIT, sprite_get("hud_alt1_portrait"));
 }
-muno_event_type = 1;
-user_event(14);
 
-
+if move_cooldown[AT_FSPECIAL_AIR] && !free move_cooldown[AT_FSPECIAL_AIR] = 0;
 
 if funny_broken_mode{
 	ki = ki_max;
@@ -79,11 +84,10 @@ if (funny_broken_mode || has_rune("J")) && ssj{
 
 
 
-if (state == PS_ROLL_BACKWARD || state == PS_ROLL_FORWARD) && state_timer == 3 || (state == PS_TECH_BACKWARD || state == PS_TECH_FORWARD) && state_timer == 4{
+if (state == PS_ROLL_BACKWARD || state == PS_ROLL_FORWARD) && state_timer == 0 || (state == PS_TECH_BACKWARD || state == PS_TECH_FORWARD) && state_timer == 0{
 	var h = spawn_hit_fx(x, y, ssjs[ssj].hairstyle == 1 ? vfx_afterimage_ssj1 : (ssjs[ssj].hairstyle == 2 ? vfx_afterimage_ssj3 : vfx_afterimage));
-	h.spr_dir = old_spr_dir;
+	h.spr_dir = -spr_dir;
 	h.goku_id = self;
-	h.hsp = sign(hsp) * 5;
 }
 
 else{
@@ -107,11 +111,6 @@ if aerial_pratfall_timer aerial_pratfall_timer--;
 
 
 
-if phone_landing uspecial_can_target = true;
-
-
-
-user_event(1);
 
 ki_meter = lerp(ki_meter, ki, 0.5);
 if abs(ki_meter - ki) < 1{
@@ -133,7 +132,6 @@ else{
 	if has_rune("N") ki = min(ki + 2, ki_max);
 }
 
-if phone_cheats[CHEAT_KI] ki = ki_max;
 
 
 
@@ -446,6 +444,10 @@ with oPlayer if "goku_ability_id" in self && goku_ability_id == other && (state 
 	}
 }
 
+with oPlayer if self != other{
+	if cell_grab_t cell_grab_t--;
+	else cell_usp_grab = 0;
+}
 
 
 #define voice_play(idx)

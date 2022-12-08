@@ -1,7 +1,11 @@
 draw_y = 0;
 spr_angle = 0;
 
-
+if(state == PS_DASH || state == PS_DASH_TURN || state == PS_DASH_START){
+	hurtbox_spr         = asset_get("ex_guy_hurt_box");
+}else{
+	hurtbox_spr = sprite_get("hurt_box")
+}
 
 if ssj == SSJ_3{
 	if get_gameplay_time() % max(10, random_func(0, 40, true)) == 0{
@@ -20,7 +24,7 @@ if ssj == SSJ_3{
 	}
 }
 
-
+var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));
 
 switch(state){
 	case PS_ATTACK_AIR:

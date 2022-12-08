@@ -17,6 +17,20 @@ switch(attack){
 	case AT_NSPECIAL:
 		set_pratfall(7);
 		break;
+	case AT_FSPECIAL:
+	set_window_value(AT_FSPECIAL, 1, AG_WINDOW_GOTO, 3);
+	grabp = noone;
+	if free{
+		attack = AT_FSPECIAL_AIR;
+		window = 1;
+		window_timer = 0;
+	}
+	break;
+	case AT_USPECIAL:
+	set_attack_value(AT_USPECIAL, AG_SPRITE, sprite_get("uspecial"));
+	startp[@0] = x + 60 * spr_dir;
+	startp[@1] = y;
+	break;
 }
 
 

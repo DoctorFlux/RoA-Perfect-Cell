@@ -10,7 +10,7 @@ else{
 
 voice_play(VB_HURT);
 
-
+if instance_exists(grabp) grabp.state = PS_HITSTUN;
 
 #define voice_play(idx)
 

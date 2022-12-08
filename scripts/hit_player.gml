@@ -26,7 +26,20 @@ if my_hitboxID.attack == AT_NSPECIAL && my_hitboxID.hbox_num == 2 && my_hitboxID
 	sound_play(sfx_dbfz_hit_broken);
 }
 
+if(my_hitboxID.attack == AT_FSPECIAL && my_hitboxID.hbox_num == 1){
+	set_window_value(AT_FSPECIAL, 1, AG_WINDOW_GOTO, 2);
+	grabp.state = PS_WRAPPED;
+	grabp.wrap_time = 1000
+}
 
+if(my_hitboxID.attack == AT_USPECIAL && my_hitboxID.hbox_num == 1){
+	hit_player_obj.state = PS_WRAPPED;
+	hit_player_obj.wrap_time = 1000;
+	hit_player_obj.cell_usp_grab = 1;
+	hit_player_obj.cell_grab_t = 20;
+}else if(my_hitboxID.attack == AT_USPECIAL && my_hitboxID.hbox_num == 2){
+	hit_player_obj.cell_usp_grab = 0;
+}
 
 var ki_mult = 5; // 4
 

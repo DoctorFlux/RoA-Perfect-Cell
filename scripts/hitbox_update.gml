@@ -6,7 +6,7 @@ else{
 	in_hitpause = 0;
 }
 
-if(attack == AT_JAB && !free){
+if(attack == AT_JAB || attack == AT_FSPECIAL_AIR) && !free{
 	destroyed = true;
 }
 if attack == AT_DSPECIAL_2{

@@ -1,7 +1,5 @@
 // press shield during taunt's startup!
 
-set_attack_value(AT_TAUNT_2, AG_MUNO_ATTACK_MISC_ADD, "Access by pressing shield during startup.");
-
 set_attack_value(AT_TAUNT_2, AG_SPRITE, sprite_get("idle"));
 set_attack_value(AT_TAUNT_2, AG_NUM_WINDOWS, 1);
 set_attack_value(AT_TAUNT_2, AG_HURTBOX_SPRITE, asset_get("ex_guy_hurt_box"));

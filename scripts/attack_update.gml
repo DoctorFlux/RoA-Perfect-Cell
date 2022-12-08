@@ -1,3 +1,12 @@
+if array_length(phone_dust_query){
+		for(var i = 0; i < array_length(phone_dust_query); i++){
+		var cur = phone_dust_query[i];
+		spawn_base_dust(cur[0], cur[1], cur[2], cur[3]);
+	}
+	var phone_dust_query = [];
+}
+
+var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));
 //B - Reversals
 if (attack == AT_NSPECIAL || attack == AT_FSPECIAL || attack == AT_DSPECIAL || attack == AT_USPECIAL){
 	trigger_b_reverse();
@@ -44,6 +53,17 @@ switch(attack){
 		break;
 	case AT_DSTRONG:
 		voice_window(3, VB_ATK_BIG);
+		break;
+	case AT_USPECIAL:
+		voice_window(1, VB_ATK_BIG);
+		break;
+	case AT_FSPECIAL:
+		if window == 2 && window_timer == 1{
+			voice_play(VB_ATK_BIG);
+		}
+		break;
+	case AT_FSPECIAL_AIR:
+		voice_window(1, VB_ATK_MED);
 		break;
 	case AT_TAUNT:
 		if window == 1 && window_timer == 1{
@@ -141,6 +161,8 @@ switch(attack){
 				can_fast_fall = false;
 				was_fully_charged = (beam_juice >= beam_juice_max);
 				if window_timer == 13{ // 1
+				move_cooldown[AT_NSPECIAL] = 120;
+				phone_arrow_cooldown = 120;
 					voice_play(VB_HA);
 					
 					// also change in nspecial.gml
@@ -283,29 +305,49 @@ switch(attack){
 		can_fast_fall = false;
 		switch(window){
 			case 1:
-				hsp *= 0.5;
-				vsp *= 0.5;
-				if window_timer == phone_window_end{
-					hsp = 35 * spr_dir;
+			if window_timer == 34{
+				for(var m = 0; m < 260; m++){
+					grabp = collision_rectangle(x, y, x + m * spr_dir, y - 60, oPlayer, 1, 1);
+					if instance_exists(grabp){
+						set_window_value(AT_FSPECIAL, 1, AG_WINDOW_GOTO, 2);
+						grabp.state = PS_WRAPPED;
+						grabp.wrap_time = 1000
+						break;
+					}
 				}
-				break;
+			}
+			if instance_exists(grabp){
+				grabp.y = lerp(grabp.y, y - 160, 0.1);
+			}
+			break;
 			case 2:
-				vsp = 0;
-				can_wall_jump = true;
-				if (special_pressed){
-					window = 3;
-					window_timer = 0;
-					destroy_hitboxes();
-				}
-				break;
+			if window_timer < 46 && window_timer && !(window_timer % 8) && !hitstop && !instance_exists(fspec_hb){
+				set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_X, abs(grabp.x - x));
+				set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_Y, (grabp.y - grabp.char_height / 2) - y);
+				fspec_hb = create_hitbox(AT_FSPECIAL, 1, x, y);
+			}
+			if window_timer = 60 && !hitstop && !instance_exists(fspec_hb){
+				set_hitbox_value(AT_FSPECIAL, 2, HG_HITBOX_X, abs(grabp.x - x));
+				set_hitbox_value(AT_FSPECIAL, 2, HG_HITBOX_Y, (grabp.y - grabp.char_height / 2) - y);
+				fspec_hb = create_hitbox(AT_FSPECIAL, 2, x, y);
+			}
+			break;
 			case 3:
-				hsp *= 0.5;
-				// vsp *= 0.5;
-				can_wall_jump = true;
-				break;
+			break;
 		}
 		break;
-	
+	case AT_FSPECIAL_AIR:
+		if window == 2 && window_timer == 1{
+			sound_play(sfx_dbfz_kidan_fire);
+		}
+		if window == 2 && window_timer == 8{
+			sound_play(sfx_dbfz_kidan_fire);
+		}
+		if window == 2 && window_timer == 14{
+			sound_play(sfx_dbfz_kidan_fire);
+		}
+		move_cooldown[AT_FSPECIAL_AIR] = 99999;
+		break;
 	
 	
 	case AT_USPECIAL:
@@ -359,14 +401,47 @@ switch(attack){
 	
 	
 	case AT_TAUNT:
-		if window_timer == 1 taunt_time = 0;
-		if window_timer == 30 && taunt_down{
-			window_timer--;
+		if window == 2 && !taunt_down{
+			window = 3;
+			window_timer = 0;
 		}
 		break;
+		
+	case AT_USPECIAL:
+	if window == 1 startp[@0] = x + 40 * spr_dir;
+	startp[@0] -= get_window_value(AT_USPECIAL, window, AG_WINDOW_HSPEED)/10 * spr_dir;
+	can_move = 0;
+	can_fast_fall = 0;
+	if window < 15 && !(window % 2) && !hitstop create_hitbox(AT_USPECIAL, 1, x, y);
+	if window == 16 && window_timer == 5 set_attack_value(AT_USPECIAL, AG_SPRITE, sprite_get("dair"));
+	if window < 14{
+		with oPlayer if self != other{
+			if cell_usp_grab{
+				if state == PS_DEAD || state == PS_RESPAWN{
+					cell_usp_grab = 0;
+					break;
+				}
+				wrap_time = 20;
+				x = lerp(x, other.startp[0], 0.5);
+				y = lerp(y, other.y, 0.5);
+			}
+		}
+		if window == 13 && window_timer == 2 startp[@1] = y;
+	}else{
+		with oPlayer if self != other{
+			if cell_usp_grab{
+				if state == PS_DEAD || state == PS_RESPAWN{
+					cell_usp_grab = 0;
+					break;
+				}
+				wrap_time = 20;
+				x = lerp(x, other.startp[0] + 10 * other.spr_dir, 0.2);
+				y = lerp(y, other.startp[1] + 30, 0.2);
+			}
+		}
+	}
+	break;
 }
-
-
 
 
 
@@ -398,6 +473,8 @@ if jump_down{
 
 
 #define voice_window(wdw, idx)
+
+var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));
 
 if window == wdw && window_timer == phone_window_end - 2{
 	voice_play(idx);
@@ -446,7 +523,7 @@ if !free && get_window_value(attack, win, AG_WINDOW_TYPE) == 7 && attack != AT_N
 
 
 
-#define beam_clash_logic
+#define beam_clash_logic()
 
 if !beam_clash_buddy.doing_goku_beam{
 	beam_clash_buddy.beam_clash_buddy = noone;
