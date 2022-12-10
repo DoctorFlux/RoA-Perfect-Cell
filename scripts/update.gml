@@ -1,3 +1,23 @@
+switch(state){
+	case PS_WALK:
+		if("walkingsound" not in self){walkingsound = 0;}
+		walkingsound += 1;
+		if walkingsound == 7 || walkingsound == 30 {
+			sound_play(sfx_walk);
+		}
+		if walkingsound == 46{
+			walkingsound = 0;
+		}
+		break;
+	case PS_IDLE:
+	case PS_CROUCH:
+	case PS_JUMPSQUAT:
+	case PS_WALK_TURN:
+	case PS_DASH_START:
+	case PS_ROLL_FORWARD:
+		walkingsound = 0;
+		break;
+}
 var phone_hud_hidden = !(get_local_setting(SET_HUD_SIZE) || get_local_setting(SET_HUD_NAMES));
 var phone_attacking = state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND
 var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));

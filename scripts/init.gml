@@ -71,6 +71,8 @@ spr_nspecial_proj = sprite_get("nspecial_proj");
 spr_example = sprite_get("example"); // sprites/example_stripX.png
 
 // SFX
+sfx_dstrong = sound_get("sfx_mol_flash_explode");
+sfx_walk = sound_get("walksound");
 sfx_dbfz_charge = sound_get("ARC_BTL_CMN_Charge_Start");
 
 sfx_dbfz_elbow = sound_get("ARC_BTL_GKN_HeavyElbow_A");

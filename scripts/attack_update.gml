@@ -20,6 +20,7 @@ switch(attack){
 		voice_window(2, VB_ATK_SMALL);
 		break;
 	case AT_DATTACK:
+		voice_window(1, VB_ATK_SMALL);
 		break;
 	case AT_FTILT:
 		voice_window(1, VB_ATK_SMALL);
@@ -52,7 +53,9 @@ switch(attack){
 		voice_window(2, VB_ATK_BIG);
 		break;
 	case AT_DSTRONG:
-		voice_window(3, VB_ATK_BIG);
+		if window == 2 && window_timer == 1{
+			voice_play(VB_ATK_BIG);
+		}
 		break;
 	case AT_USPECIAL:
 		voice_window(1, VB_ATK_BIG);
@@ -455,6 +458,19 @@ switch(attack){
 	break;
 	
 	case AT_DSTRONG:
+		if("dstrong_sound" not in self){dstrong_sound = 0;}
+		if window == 2{
+			if window_timer == 7 || window_timer == 10 || window_timer == 13 || window_timer == 16 || window_timer == 19 {
+				if dstrong_sound == 1{
+					sound_play(asset_get("sfx_mol_flash_explode"));
+					dstrong_sound = 0;
+				}
+			}else{
+				dstrong_sound = 1;
+			}
+		}
+	can_move = 0;
+	can_fastfall = 0;
 	if free move_cooldown[AT_DSTRONG] = 5;
 	switch window{
 		case 1:
@@ -483,31 +499,31 @@ switch(attack){
 				}
 			}
 		}
-		if array_length(b1_pos) && window_timer = 3 && !hitstop{
+		if array_length(b1_pos) && window_timer = 7 && !hitstop{
 			set_hitbox_value(AT_DSTRONG, 2, HG_HITBOX_X, b1_pos[0]);
 			set_hitbox_value(AT_DSTRONG, 2, HG_HITBOX_Y, b1_pos[1] -10);
 			create_hitbox(AT_DSTRONG, 2, x, y);
 			spawn_hit_fx(x + b1_pos[0]*spr_dir, y + b1_pos[1] -10, 270);
 		}
-		if array_length(b2_pos) && window_timer = 4 && !hitstop{
+		if array_length(b2_pos) && window_timer = 10 && !hitstop{
 			set_hitbox_value(AT_DSTRONG, 3, HG_HITBOX_X, b2_pos[0]);
 			set_hitbox_value(AT_DSTRONG, 3, HG_HITBOX_Y, b2_pos[1] -10);
 			create_hitbox(AT_DSTRONG, 3, x, y);
 			spawn_hit_fx(x + b2_pos[0]*spr_dir, y + b2_pos[1] -10, 270);
 		}
-		if array_length(b3_pos) && window_timer = 5 && !hitstop{
+		if array_length(b3_pos) && window_timer = 13 && !hitstop{
 			set_hitbox_value(AT_DSTRONG, 4, HG_HITBOX_X, b3_pos[0]);
 			set_hitbox_value(AT_DSTRONG, 4, HG_HITBOX_Y, b3_pos[1] -10);
 			create_hitbox(AT_DSTRONG, 4, x, y);
 			spawn_hit_fx(x + b3_pos[0]*spr_dir, y + b3_pos[1] -10, 270);
 		}
-		if array_length(b4_pos) && window_timer = 6 && !hitstop{
+		if array_length(b4_pos) && window_timer = 16 && !hitstop{
 			set_hitbox_value(AT_DSTRONG, 5, HG_HITBOX_X, b4_pos[0]);
 			set_hitbox_value(AT_DSTRONG, 5, HG_HITBOX_Y, b4_pos[1] -10);
 			create_hitbox(AT_DSTRONG, 5, x, y);
 			spawn_hit_fx(x + b4_pos[0]*spr_dir, y + b4_pos[1] -10, 270);
 		}
-		if array_length(b5_pos) && window_timer = 7 && !hitstop{
+		if array_length(b5_pos) && window_timer = 19 && !hitstop{
 			set_hitbox_value(AT_DSTRONG, 6, HG_HITBOX_X, b5_pos[0]);
 			set_hitbox_value(AT_DSTRONG, 6, HG_HITBOX_Y, b5_pos[1] -10);
 			create_hitbox(AT_DSTRONG, 6, x, y);
