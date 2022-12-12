@@ -58,7 +58,7 @@ sprite_change_offset("fspecial_vfx", 100, 50);
 sprite_change_offset("fspecial_hurt", 100, 154, true);
 sprite_change_offset("uspecial", 93, 120);
 sprite_change_offset("dspecial", 50, 70, true);
-sprite_change_offset("dspecial_2", 50, 70, true);
+sprite_change_offset("dspecial_vfx", 50, 70, true);
 sprite_change_offset("taunt", 50, 70);
 sprite_change_offset("phone_open", 50, 70);
 
