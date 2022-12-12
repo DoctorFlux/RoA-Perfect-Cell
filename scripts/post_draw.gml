@@ -100,7 +100,7 @@ if state == PS_ATTACK_GROUND && attack == AT_FSPECIAL && instance_exists(grabp){
 	draw_sprite_ext(sprite_get("fspecial_vfx"), image_index, grabp.x, grabp.y - grabp.char_height/2, 2 * spr_dir, 2, 0, c_white, 1);
 }
 
-if attack == AT_JAB && state != PS_AIR_DODGE && state != PS_PARRY_START && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{	
+if attack == AT_JAB && state != PS_AIR_DODGE && state != PS_PARRY_START && != PS_PARRY && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{	
 	if window == 2{
 		if	window_timer == 0 || window_timer == 1{
 			draw_sprite_ext(sprite_get("jab_vfx"), 0, x, y , 2 * spr_dir, 2, 0, c_white, 1);
@@ -113,7 +113,7 @@ if attack == AT_JAB && state != PS_AIR_DODGE && state != PS_PARRY_START && state
 		}
 	}
 }
-if attack == AT_FSTRONG && state != PS_AIR_DODGE && state != PS_PARRY_START && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{	
+if attack == AT_FSTRONG && state != PS_AIR_DODGE && state != PS_PARRY_START && != PS_PARRY && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{	
 	if window == 3{
 		if	window_timer == 2 || window_timer == 3{
 			draw_sprite_ext(sprite_get("fstrong_vfx"), 0, x + 56 * spr_dir, y , 2 * spr_dir, 2, 0, c_white, 1);
@@ -137,7 +137,7 @@ if attack == AT_FSTRONG && state != PS_AIR_DODGE && state != PS_PARRY_START && s
 		}
 	}
 }
-if attack == AT_FSPECIAL_AIR && state != PS_AIR_DODGE && state != PS_PARRY_START && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{
+if attack == AT_FSPECIAL_AIR && state != PS_AIR_DODGE && state != PS_PARRY_START && != PS_PARRY && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{
 	if window == 2{
 		if	window_timer == 0 || window_timer == 1  ||  window_timer == 7  ||  window_timer == 8  ||  window_timer == 13  ||  window_timer == 14 {
 			draw_sprite_ext(sprite_get("fspecialair_vfx"), 0, x, y , 2 * spr_dir, 2, 0, c_white, 1);
@@ -150,7 +150,7 @@ if attack == AT_FSPECIAL_AIR && state != PS_AIR_DODGE && state != PS_PARRY_START
 		}
 	}
 }
-if attack == AT_FSPECIAL && state != PS_AIR_DODGE && state != PS_PARRY_START && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{
+if attack == AT_FSPECIAL && state != PS_AIR_DODGE && state != PS_PARRY_START && != PS_PARRY && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{
 	if window == 1{
 		if	window_timer == 12 || window_timer == 13 || window_timer == 14{
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 0, x+60*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
