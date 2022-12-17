@@ -1,5 +1,6 @@
 switch(state){
 	case PS_WALK:
+		sound_stop(sfx_dbfz_energyfield_fire);
 		if("walkingsound" not in self){walkingsound = 0;}
 		walkingsound += 1;
 		if walkingsound == 7 || walkingsound == 30 {
@@ -15,9 +16,14 @@ switch(state){
 	case PS_WALK_TURN:
 	case PS_DASH_START:
 	case PS_ROLL_FORWARD:
+	case PS_HITSTUN:
+	case PS_HITSTUN_LAND:
+	case PS_ROLL_FORWARD:
+		sound_stop(sfx_dbfz_energyfield_fire);
 		walkingsound = 0;
 		break;
 }
+
 var phone_hud_hidden = !(get_local_setting(SET_HUD_SIZE) || get_local_setting(SET_HUD_NAMES));
 var phone_attacking = state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND
 var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));
