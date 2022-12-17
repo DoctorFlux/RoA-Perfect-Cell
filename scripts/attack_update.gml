@@ -69,19 +69,20 @@ switch(attack){
 		voice_window(1, VB_ATK_MED);
 		break;
 	case AT_TAUNT:
-		if window == 1 && window_timer == 1{
-			voice_play(VB_TAUNT);
-		}
+		if window_timer == 1 voice_play(VB_TAUNT);
+		if attack_down ssj = 2;
+		break;
 }
 
 
 
 switch(attack){
 	case AT_NSPECIAL:
+	move_cooldown[AT_NSPECIAL] = 180;
 		switch(window){
 			case 1: // startup
 				if window_timer == 1{
-					beam_juice = 60 + 60 * (ssj > 0); // 30 + 60 * (...)
+					beam_juice = 60 + 60; // 30 + 60 * (...)
 					beam_juice_max = 60 * 8;
 					beam_length = 0; // current length of beam
 					hsp = clamp(hsp, -2, 2);
@@ -164,7 +165,6 @@ switch(attack){
 				can_fast_fall = false;
 				was_fully_charged = (beam_juice >= beam_juice_max);
 				if window_timer == 13{ // 1
-				move_cooldown[AT_NSPECIAL] = 120;
 				phone_arrow_cooldown = 120;
 					voice_play(VB_HA);
 					
@@ -172,16 +172,9 @@ switch(attack){
 					set_window_value(AT_NSPECIAL, 7, AG_WINDOW_LENGTH, 16 + floor(ease_sineIn(0, 30, beam_juice, beam_juice_max)));
 				}
 				if window_timer == phone_window_end{
-					if beam_juice >= beam_juice_max && !ssj{
-						chooseSsj();
-						sound_play(sfx_dbfz_charge);
-						ki = ki_max;
-						kaioken = 0;
-					}
 					if funny_broken_mode || has_rune("L"){
 						beam_juice = beam_juice_max;
 					}
-					spawn_form_aura();
 					spawn_nspecial_hitbox(1);
 					sound_play(sfx_dbfz_kame_fire);
 					spawn_base_dust(x, y, "dash_start");
@@ -308,13 +301,12 @@ switch(attack){
 		can_fast_fall = false;
 		switch(window){
 			case 1:
-			if window_timer == 34{
+			if window_timer == 34 && !hitstop{
 				for(var m = 0; m < 260; m++){
-					grabp = collision_rectangle(x, y, x + m * spr_dir, y - 60, oPlayer, 1, 1);
-					if instance_exists(grabp){
-						grabx = grabp.x;
-						set_window_value(AT_FSPECIAL, 1, AG_WINDOW_GOTO, 2);
-						grabp.state = PS_FLASHED;
+					var colp = collision_rectangle(x, y, x + m * spr_dir, y - 60, oPlayer, 1, 1);
+					if instance_exists(colp){
+						set_hitbox_value(AT_FSPECIAL, 3, HG_HITBOX_X, abs(x - colp.x));
+						create_hitbox(AT_FSPECIAL, 3, x, y);
 						break;
 					}
 				}
@@ -351,6 +343,7 @@ switch(attack){
 		}
 		break;
 	case AT_FSPECIAL_AIR:
+	can_fast_fall = 0;
 		if window == 2 && window_timer == 1{
 			sound_play(sfx_dbfz_kidan_fire);
 		}
@@ -363,68 +356,15 @@ switch(attack){
 		move_cooldown[AT_FSPECIAL_AIR] = 99999;
 		break;
 	
-	
-	case AT_USPECIAL:
-	if window < 16 with oPlayer if self != other && cell_usp_grab = 1 state = PS_FLASHED;
-		can_move = false;
-		can_fast_fall = false;
-		can_wall_jump = true;
-		fall_through = true;
-		switch(window){
-			case 1: // startup
-				hsp = 0;
-				vsp = 0;
-				if window_timer == phone_window_end{
-					vsp = -5;
-				}
-				break;
-			case 2: // flight
-				if (!joy_pad_idle){
-					hsp += lengthdir_x(1, joy_dir);
-					vsp += lengthdir_y(1, joy_dir);
-				} else {
-					hsp *= .6;
-					vsp *= .6;
-				}
-				var fly_dir = point_direction(0,0,hsp,vsp);
-				var fly_dist = point_distance(0,0,hsp,vsp);
-				var max_speed = 10; // 12
-				if (fly_dist > max_speed){
-					hsp = lengthdir_x(max_speed, fly_dir);
-					vsp = lengthdir_y(max_speed, fly_dir);
-				}
-				break;
-			case 3: // atk startup
-			case 4: // atk active
-			case 5: // endlag
-				hsp = 0;
-				vsp = 0;
-				break;
-		}
-		break;
-	
-	
-	
-	case AT_DSPECIAL:
-		if (!hitpause && !was_parried && has_hit){
-			can_jump = true;
-		}
-		can_fast_fall = false;
-		can_move = false;
-		break;
-	
-	
-	
-	case AT_TAUNT:
-		if window == 2 && !taunt_down{
-			window = 3;
-			window_timer = 0;
-		}
-		break;
 		
 	case AT_USPECIAL:
+	if (left_down || right_down) && window < 16 && !hitstop{
+		x += (right_down? 1: -1);
+		startp[@0] += (right_down? 1: -1);
+	}
 	if window == 1 startp[@0] = x + 40 * spr_dir;
-	startp[@0] -= get_window_value(AT_USPECIAL, window, AG_WINDOW_HSPEED)/10 * spr_dir;
+	if !hitstop startp[@0] -= get_window_value(AT_USPECIAL, window, AG_WINDOW_HSPEED)/10 * spr_dir;
+	if hsp = 0 && !hitstop startp[@0] -= get_window_value(AT_USPECIAL, window, AG_WINDOW_HSPEED)* spr_dir;
 	can_move = 0;
 	can_fast_fall = 0;
 	if window < 15 && !(window % 2) && !hitstop create_hitbox(AT_USPECIAL, 1, x, y);
@@ -436,41 +376,29 @@ switch(attack){
 					cell_usp_grab = 0;
 					break;
 				}
-				wrap_time = 20;
+				state = PS_FLASHED;
 				x = lerp(x, other.startp[0], 0.5);
 				y = lerp(y, other.y, 0.5);
 			}
 		}
 		if window == 13 && window_timer == 2 startp[@1] = y;
-	}else{
+	}else if window < 16{
 		with oPlayer if self != other{
 			if cell_usp_grab{
 				if state == PS_DEAD || state == PS_RESPAWN{
 					cell_usp_grab = 0;
-					break;
 				}
-				wrap_time = 20;
+				state = PS_FLASHED;
 				x = lerp(x, other.startp[0] + 10 * other.spr_dir, 0.2);
 				y = lerp(y, other.startp[1] + 30, 0.2);
 			}
 		}
-	}
+	}else if window >= 16 grabp = noone;
 	break;
 	
 	case AT_DSTRONG:
-		if("dstrong_sound" not in self){dstrong_sound = 0;}
-		if window == 2{
-			if window_timer == 7 || window_timer == 10 || window_timer == 13 || window_timer == 16 || window_timer == 19 {
-				if dstrong_sound == 1{
-					sound_play(asset_get("sfx_mol_flash_explode"));
-					dstrong_sound = 0;
-				}
-			}else{
-				dstrong_sound = 1;
-			}
-		}
 	can_move = 0;
-	can_fastfall = 0;
+	can_fast_fall = 0;
 	if free move_cooldown[AT_DSTRONG] = 5;
 	switch window{
 		case 1:
@@ -479,58 +407,87 @@ switch(attack){
 		case 2:
 		if window_timer == 1{
 			for(var b = 0; b <= 400; b+=5){
-				if (position_meeting(x + dcos(270)*b*spr_dir, y - dsin(270)*b, asset_get("par_block")) || position_meeting(x + dcos(270)*b*spr_dir, y - dsin(270)*b, asset_get("par_jumpthrough"))) && !array_length(b1_pos){
-					b1_pos = [dcos(270)*b, -dsin(270)*b];
+				if (position_meeting(x +(dcos(260)*b - 10)*spr_dir, y - dsin(260)*b + 10, asset_get("par_block")) || position_meeting(x +(dcos(260)*b - 10)*spr_dir, y - dsin(260)*b + 10, asset_get("par_jumpthrough"))) && !array_length(b1_pos){
+					b1_pos = [(dcos(260)*b)-10, -(dsin(260)*b)];
 				}
-				if (position_meeting(x + dcos(280)*b*spr_dir, y - dsin(280)*b, asset_get("par_block")) || position_meeting(x + dcos(280)*b*spr_dir, y - dsin(280)*b, asset_get("par_jumpthrough"))) && !array_length(b2_pos){
-					b2_pos = [dcos(280)*b, -dsin(280)*b];
+				if (position_meeting(x + dcos(270)*b*spr_dir, y - dsin(270)*b + 10, asset_get("par_block")) || position_meeting(x + dcos(270)*b*spr_dir, y - dsin(270)*b + 10, asset_get("par_jumpthrough"))) && !array_length(b2_pos){
+					b2_pos = [dcos(270)*b, -dsin(270)*b];
 				}
-				if (position_meeting(x + dcos(290)*b*spr_dir, y - dsin(290)*b, asset_get("par_block")) || position_meeting(x + dcos(290)*b*spr_dir, y - dsin(290)*b, asset_get("par_jumpthrough"))) && !array_length(b3_pos){
-					b3_pos = [dcos(290)*b, -dsin(290)*b];
+				if (position_meeting(x + dcos(280)*b*spr_dir, y - dsin(280)*b + 10, asset_get("par_block")) || position_meeting(x + dcos(280)*b*spr_dir, y - dsin(280)*b + 10, asset_get("par_jumpthrough"))) && !array_length(b3_pos){
+					b3_pos = [dcos(280)*b, -dsin(280)*b];
 				}
-				if (position_meeting(x + dcos(300)*b*spr_dir, y - dsin(300)*b, asset_get("par_block")) || position_meeting(x + dcos(300)*b*spr_dir, y - dsin(300)*b, asset_get("par_jumpthrough"))) && !array_length(b4_pos){
-					b4_pos = [dcos(300)*b, -dsin(300)*b];
+				if (position_meeting(x + (dcos(285)*b + 20)*spr_dir, y - dsin(285)*b + 10, asset_get("par_block")) || position_meeting(x + (dcos(285)*b + 20)*spr_dir, y - dsin(285)*b + 10, asset_get("par_jumpthrough"))) && !array_length(b4_pos){
+					b4_pos = [dcos(285)*b + 20, -dsin(285)*b];
 				}
-				if (position_meeting(x + dcos(310)*b*spr_dir, y - dsin(310)*b, asset_get("par_block")) || position_meeting(x + dcos(310)*b*spr_dir, y - dsin(310)*b, asset_get("par_jumpthrough"))) && !array_length(b5_pos){
-					b5_pos = [dcos(310)*b, -dsin(310)*b];
+				if (position_meeting(x + (dcos(290)*b + 40)*spr_dir, y - dsin(290)*b + 10, asset_get("par_block")) || position_meeting(x + (dcos(290)*b + 40)*spr_dir, y - dsin(290)*b + 10, asset_get("par_jumpthrough"))) && !array_length(b5_pos){
+					b5_pos = [dcos(290)*b + 40, -dsin(290)*b];
 				}
-				if array_length(b1_pos) && array_length(b2_pos) && array_length(b3_pos) && array_length(b4_pos) && array_length(b5_pos){
+				if (position_meeting(x + (dcos(295)*b + 60)*spr_dir, y - dsin(295)*b + 10, asset_get("par_block")) || position_meeting(x + (dcos(295)*b + 60)*spr_dir, y - dsin(295)*b + 10, asset_get("par_jumpthrough"))) && !array_length(b6_pos){
+					b6_pos = [dcos(295)*b + 60, -dsin(295)*b];
+				}
+				if array_length(b1_pos) && array_length(b2_pos) && array_length(b3_pos) && array_length(b4_pos) && array_length(b5_pos) && array_length(b6_pos){
 					break;
 				}
 			}
 		}
-		if array_length(b1_pos) && window_timer = 7 && !hitstop{
+		if array_length(b1_pos) && window_timer = 4 && !hitstop{
+			sound_play(asset_get("sfx_mol_flash_explode"));
 			set_hitbox_value(AT_DSTRONG, 2, HG_HITBOX_X, b1_pos[0]);
-			set_hitbox_value(AT_DSTRONG, 2, HG_HITBOX_Y, b1_pos[1] -10);
+			set_hitbox_value(AT_DSTRONG, 2, HG_HITBOX_Y, b1_pos[1]);
 			create_hitbox(AT_DSTRONG, 2, x, y);
 			spawn_hit_fx(x + b1_pos[0]*spr_dir, y + b1_pos[1] -10, 270);
 		}
-		if array_length(b2_pos) && window_timer = 10 && !hitstop{
+		if array_length(b2_pos) && window_timer = 7 && !hitstop{
+			sound_play(asset_get("sfx_mol_flash_explode"));
 			set_hitbox_value(AT_DSTRONG, 3, HG_HITBOX_X, b2_pos[0]);
-			set_hitbox_value(AT_DSTRONG, 3, HG_HITBOX_Y, b2_pos[1] -10);
+			set_hitbox_value(AT_DSTRONG, 3, HG_HITBOX_Y, b2_pos[1]);
 			create_hitbox(AT_DSTRONG, 3, x, y);
 			spawn_hit_fx(x + b2_pos[0]*spr_dir, y + b2_pos[1] -10, 270);
 		}
-		if array_length(b3_pos) && window_timer = 13 && !hitstop{
+		if array_length(b3_pos) && window_timer = 10 && !hitstop{
+			sound_play(asset_get("sfx_mol_flash_explode"));
 			set_hitbox_value(AT_DSTRONG, 4, HG_HITBOX_X, b3_pos[0]);
-			set_hitbox_value(AT_DSTRONG, 4, HG_HITBOX_Y, b3_pos[1] -10);
+			set_hitbox_value(AT_DSTRONG, 4, HG_HITBOX_Y, b3_pos[1]);
 			create_hitbox(AT_DSTRONG, 4, x, y);
 			spawn_hit_fx(x + b3_pos[0]*spr_dir, y + b3_pos[1] -10, 270);
 		}
-		if array_length(b4_pos) && window_timer = 16 && !hitstop{
+		if array_length(b4_pos) && window_timer = 13 && !hitstop{
+			sound_play(asset_get("sfx_mol_flash_explode"));
 			set_hitbox_value(AT_DSTRONG, 5, HG_HITBOX_X, b4_pos[0]);
-			set_hitbox_value(AT_DSTRONG, 5, HG_HITBOX_Y, b4_pos[1] -10);
+			set_hitbox_value(AT_DSTRONG, 5, HG_HITBOX_Y, b4_pos[1]);
 			create_hitbox(AT_DSTRONG, 5, x, y);
 			spawn_hit_fx(x + b4_pos[0]*spr_dir, y + b4_pos[1] -10, 270);
 		}
-		if array_length(b5_pos) && window_timer = 19 && !hitstop{
+		if array_length(b5_pos) && window_timer = 16 && !hitstop{
+			sound_play(asset_get("sfx_mol_flash_explode"));
 			set_hitbox_value(AT_DSTRONG, 6, HG_HITBOX_X, b5_pos[0]);
-			set_hitbox_value(AT_DSTRONG, 6, HG_HITBOX_Y, b5_pos[1] -10);
+			set_hitbox_value(AT_DSTRONG, 6, HG_HITBOX_Y, b5_pos[1]);
 			create_hitbox(AT_DSTRONG, 6, x, y);
 			spawn_hit_fx(x + b5_pos[0]*spr_dir, y + b5_pos[1] -10, 270);
 		}
+		if array_length(b6_pos) && window_timer = 19 && !hitstop{
+			sound_play(asset_get("sfx_mol_flash_explode"));
+			set_hitbox_value(AT_DSTRONG, 7, HG_HITBOX_X, b6_pos[0]);
+			set_hitbox_value(AT_DSTRONG, 7, HG_HITBOX_Y, b6_pos[1]);
+			create_hitbox(AT_DSTRONG, 7, x, y);
+			spawn_hit_fx(x + b6_pos[0]*spr_dir, y + b6_pos[1] -10, 270);
+		}
 		break;
 	}
+	break;
+	case AT_DSPECIAL:
+	can_move = 0;
+	can_fast_fall = 0;
+	vsp = 0;
+	hsp = 0;
+	if window == 2{
+		dsp_ch++;
+		if (!special_down && dsp_ch >= 5) || dsp_ch >= 60{
+			window = 3;
+			window_timer = 0;
+		}
+	}
+	if window == 3 hud_offset = 30;
 	break;
 }
 
@@ -539,27 +496,6 @@ switch(attack){
 #define check_string_for_name(player, string)
 
 return string_count(string, string_lower(get_char_info(player, INFO_STR_NAME)))
-
-
-
-#define chooseSsj
-
-ssj = SSJ_1;
-if shield_down{
-	ssj = SSJ_UI;
-}
-if attack_down{
-	ssj = SSJ_3;
-	if shield_down{
-		ssj = SSJ_BLUE;
-	}
-}
-if jump_down{
-	ssj = SSJ_GOD;
-	if shield_down{
-		ssj = SSJ_BLUE;
-	}
-}
 
 
 
@@ -577,28 +513,6 @@ if window == wdw && window_timer == phone_window_end - 2{
 
 cur_vc = idx;
 user_event(0);
-
-
-
-#define spawn_form_aura
-
-if ssj return spawn_hit_fx(x, y, vfx_ssj_start);
-if kaioken return spawn_hit_fx(x, y, vfx_kaioken_start);
-
-
-
-#define ssj_cancel(win)
-
-if ssj && window == win && has_hit && !hitpause{
-	if funny_broken_mode || has_rune("K"){
-		iasa_script();
-		return;
-	}
-	can_special = true;
-	can_strong = true;
-	can_ustrong = true;
-}
-
 
 
 #define set_pratfall(win)

@@ -3,20 +3,13 @@ var phone_hud_hidden = !(get_local_setting(SET_HUD_SIZE) || get_local_setting(SE
 var phone_attacking = state == PS_ATTACK_AIR || state == PS_ATTACK_GROUND
 var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) * ((get_window_value(attack, window, AG_WINDOW_HAS_WHIFFLAG) && !has_hit) ? 1.5 : 1));
 if !phone_hud_hidden && draw_indicator{
-	var col = (phone_arrow_cooldown && !(phone_arrow_cooldown - 1 < 25 && (phone_arrow_cooldown - 1) % 10 >= 5)) ? phone_darkened_player_color : get_player_hud_color(player);
+	var col = (move_cooldown[AT_NSPECIAL] && !(move_cooldown[AT_NSPECIAL] - 1 < 25 && (move_cooldown[AT_NSPECIAL] - 1) % 10 >= 5)) ? phone_darkened_player_color : get_player_hud_color(player);
 	draw_sprite_ext(sprite_get("_pho_cooldown_arrow"), 0, x - 7, y - char_height - hud_offset - 28, 1, 1, 0, col, 1);
 }
 
 if funny_broken_mode{
 	shader_start();
 	draw_sprite_ext(sprite_index, image_index, x + draw_x, y + draw_y, image_xscale * 2, image_yscale * 2, spr_angle, c_white, 1);
-	shader_end();
-}
-
-
-if kaioken{
-	shader_start();
-	draw_sprite_ext(sprite_index, image_index, x + draw_x, y + draw_y, image_xscale * 2, image_yscale * 2, spr_angle, kaioken_red_dark, 0.5);
 	shader_end();
 }
 
@@ -178,6 +171,7 @@ if attack == AT_FSPECIAL && state != PS_AIR_DODGE && state != PS_PARRY_START && 
 		}
 	}
 }
+
 #define meterDraw(center, top, width, height, color, amount, alpha, alpha2, border)
 
 if width < 6 return;

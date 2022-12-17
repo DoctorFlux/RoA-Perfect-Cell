@@ -28,16 +28,8 @@ if phone_attacking && attack == AT_NSPECIAL{if window == 7{
 	}
 }
 
-
-
-if kaioken{
-	
-	draw_outline(kaioken_red_dark);
-	
-}
-
-else if ssj{
-	
+if ssj{
+	print("e");
 	draw_outline(ssjs[ssj].color);
 	
 }

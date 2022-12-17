@@ -14,6 +14,19 @@ if (my_hitboxID.attack == AT_FTILT && my_hitboxID.hbox_num == 1){
 
 if attack == AT_DSTRONG hitstop = 0;
 
+if my_hitboxID.attack == AT_FSPECIAL && my_hitboxID.hbox_num == 3 && grabp == noone{
+	grabp = hit_player_obj;
+	grabx = grabp.x;
+	set_window_value(AT_FSPECIAL, 1, AG_WINDOW_GOTO, 2);
+	grabp.state = PS_FLASHED;
+}
+
+if my_hitboxID.attack == AT_FSPECIAL && my_hitboxID.hbox_num == 1{
+	sound_play(sfx_dbfz_swipe_weak1);
+}else if my_hitboxID.attack == AT_FSPECIAL && my_hitboxID.hbox_num == 2{
+	sound_play(sfx_dbfz_swipe_heavy1);
+}
+
 if my_hitboxID.attack == AT_NSPECIAL && !has_updated_beam_kb{ // also change in nspecial.gml
 	has_updated_beam_kb = true;
 	set_hitbox_value(AT_NSPECIAL, 2, HG_BASE_KNOCKBACK, lerp(7, 12, beam_juice / beam_juice_max));
@@ -31,6 +44,8 @@ if my_hitboxID.attack == AT_NSPECIAL && my_hitboxID.hbox_num == 2 && my_hitboxID
 if(my_hitboxID.attack == AT_USPECIAL && my_hitboxID.hbox_num == 1){
 	hit_player_obj.cell_usp_grab = 1;
 	hit_player_obj.cell_grab_t = 20;
+	hit_player_obj.x = startp[0];
+	hit_player_obj.y = y;
 }else if(my_hitboxID.attack == AT_USPECIAL && my_hitboxID.hbox_num == 2){
 	hit_player_obj.cell_usp_grab = 0;
 }
@@ -38,27 +53,9 @@ if(my_hitboxID.attack == AT_USPECIAL && my_hitboxID.hbox_num == 1){
 var ki_mult = 5; // 4
 
 switch my_hitboxID.attack{
-	case AT_NSPECIAL:
-		if my_hitboxID.hbox_num == 1{
-			if !ssj ki = min(ki + my_hitboxID.damage * ki_mult, ki_max);
-			if kaioken{
-				take_damage(hit_player_obj.player, player, 1);
-				kaioken = min(kaioken + my_hitboxID.damage * ki_mult, ki_max);
-			}
-			break;
-		}
-	case AT_DSPECIAL_2:
-		if my_hitboxID.hbox_num == 2{
-			if !ssj ki = min(ki + my_hitboxID.damage * ki_mult, ki_max);
-			break;
-		}
-	default:
-		if !ssj ki = min(ki + my_hitboxID.damage * ki_mult, ki_max);
-		if kaioken{
-			take_damage(hit_player_obj.player, player, 2);
-			kaioken = min(kaioken + my_hitboxID.damage * ki_mult, ki_max);
-		}
-		break;
+	case AT_JAB:
+	move_cooldown[AT_JAB] = 30;
+	break;
 }
 
 

@@ -30,11 +30,6 @@ switch(state){
 	case PS_ATTACK_AIR:
 	case PS_ATTACK_GROUND:
 		switch(attack){
-			case AT_USTRONG:
-				if window == 3 || (window == 4 && window_timer < phone_window_end / 2){
-					hud_offset = 60;
-				}
-				break;
 			case AT_NSPECIAL:
 				if window == clamp(window, 4, 7) && abs(lengthdir_y(1, beam_angle)) > abs(lengthdir_y(1, 15)){
 					image_index += 6 * sign(lengthdir_y(1, beam_angle));
@@ -56,7 +51,7 @@ switch(state){
 
 
 
-if state == PS_SPAWN{
+/*if state == PS_SPAWN{
 	var frame_dur = 5;
 	var amt_frames = 12;
 	var dur = frame_dur * amt_frames;
@@ -94,7 +89,7 @@ if state == PS_SPAWN{
 				
 		}
 	}
-}
+}*/
 
 
 

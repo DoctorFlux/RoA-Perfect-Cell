@@ -10,7 +10,10 @@ else{
 
 voice_play(VB_HURT);
 
-if instance_exists(grabp) grabp.state = PS_HITSTUN;
+grabp = noone;
+
+moove_cooldown[AT_FSPECIAL_AIR] = 0;
+moove_cooldown[AT_DSTRONG] = 0;
 
 #define voice_play(idx)
 

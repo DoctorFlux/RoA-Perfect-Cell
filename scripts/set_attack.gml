@@ -21,6 +21,7 @@ switch(attack){
 			b3_pos = [];
 			b4_pos = [];
 			b5_pos = [];
+			b6_pos = [];
 		}
 		break;
 	case AT_NSPECIAL:
@@ -36,8 +37,9 @@ switch(attack){
 	}
 	break;
 	case AT_USPECIAL:
+	prev_pos = x;
 	set_attack_value(AT_USPECIAL, AG_SPRITE, sprite_get("uspecial"));
-	startp[@0] = x + 60 * spr_dir;
+	startp[@0] = x + 40 * spr_dir;
 	startp[@1] = y;
 	break;
 	case AT_DSTRONG:
@@ -47,6 +49,10 @@ switch(attack){
 	b3_pos = [];
 	b4_pos = [];
 	b5_pos = [];
+	b6_pos = [];
+	break;
+	case AT_DSPECIAL:
+	dsp_ch = 0;
 	break;
 }
 

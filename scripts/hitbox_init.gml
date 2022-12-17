@@ -8,6 +8,7 @@ if attack == AT_FTILT{
 }
 
 if attack == AT_JAB depth = player_id.depth + 2;
+if attack == AT_FSPECIAL_AIR depth = player_id.depth + 2;
 
 if attack == AT_DSPECIAL_2{
 	

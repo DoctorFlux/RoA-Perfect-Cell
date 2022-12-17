@@ -25,6 +25,8 @@ var phone_window_end = floor(get_window_value(attack, window, AG_WINDOW_LENGTH) 
 init_shader();
 
 //misc code bits
+if state == PS_SPAWN && taunt_down ssj = 2;
+
 if move_cooldown[AT_DSTRONG] && free move_cooldown[AT_DSTRONG] = 5;
 
 if phone_arrow_cooldown > 0 phone_arrow_cooldown--;
@@ -46,24 +48,6 @@ if get_player_color(player) == 0 {
 }
 
 if move_cooldown[AT_FSPECIAL_AIR] && !free move_cooldown[AT_FSPECIAL_AIR] = 0;
-
-if funny_broken_mode{
-	ki = ki_max;
-	if !ssj spawn_form_aura();
-	ssj = SSJ_UI;
-	invincible = true;
-	with pHitBox if player != other.player && place_meeting(x, y, other){
-		var owner_id = player_id;
-		with other{
-			if x != owner_id.x{
-				spr_dir = sign(owner_id.x - x);
-			}
-			attack_end();
-			set_attack(AT_EXTRA_1);
-		}
-	}
-}
-
 
 
 if (funny_broken_mode || has_rune("J")) && ssj{
@@ -109,7 +93,7 @@ if (funny_broken_mode || has_rune("J")) && ssj{
 
 
 if (state == PS_ROLL_BACKWARD || state == PS_ROLL_FORWARD) && state_timer == 0 || (state == PS_TECH_BACKWARD || state == PS_TECH_FORWARD) && state_timer == 0{
-	var h = spawn_hit_fx(x, y, ssjs[ssj].hairstyle == 1 ? vfx_afterimage_ssj1 : (ssjs[ssj].hairstyle == 2 ? vfx_afterimage_ssj3 : vfx_afterimage));
+	var h = spawn_hit_fx(x, y, vfx_afterimage);
 	h.spr_dir = -spr_dir;
 	h.goku_id = self;
 }
@@ -132,51 +116,6 @@ with asset_get("hit_fx_obj") if "goku_id" in self && goku_id == other{
 doing_goku_beam = (phone_attacking && attack == AT_NSPECIAL && window == clamp(window, 4, 6));
 
 if aerial_pratfall_timer aerial_pratfall_timer--;
-
-
-
-
-ki_meter = lerp(ki_meter, ki, 0.5);
-if abs(ki_meter - ki) < 1{
-	ki_meter = ki;
-}
-
-if ssj{
-	if !has_rune("N") ki = max(ki - 1, 0);
-	if ki == 0{
-		ssj = SSJ_NONE;
-	}
-	
-	move_cooldown[AT_FSPECIAL] = min(move_cooldown[AT_FSPECIAL], 30);
-	move_cooldown[AT_USPECIAL] = min(move_cooldown[AT_USPECIAL], 30);
-	phone_arrow_cooldown = min(phone_arrow_cooldown, 30);
-}
-
-else{
-	if has_rune("N") ki = min(ki + 2, ki_max);
-}
-
-
-
-
-if was_ssj != ssj{
-	if !ssj sound_play(sfx_dbfz_teleport_end)
-	init_shader();
-	if "orig_dash_speed" not in self{
-		orig_dash_speed = dash_speed;
-		orig_initial_dash_speed = initial_dash_speed;
-		orig_knockback_adj = knockback_adj;
-	}
-	dash_speed = orig_dash_speed + 1 * (ssj > 0);
-	initial_dash_speed = orig_initial_dash_speed + 1 * (ssj > 0);
-	knockback_adj = orig_knockback_adj + 0.2 * (ssj > 0);
-	current_sprite_set = ssjs[ssj].hairstyle;
-	
-	// set_window_value(AT_DTILT, 1, AG_WINDOW_LENGTH, 6 + 2 * (ssj > 0));
-	// set_window_value(AT_DTILT, 1, AG_WINDOW_SFX_FRAME, 0 + 2 * (ssj > 0));
-}
-
-was_ssj = ssj;
 
 
 
@@ -612,4 +551,3 @@ return newdust;
 #define spawn_form_aura
 
 if ssj return spawn_hit_fx(x, y, vfx_ssj_start);
-if kaioken return spawn_hit_fx(x, y, vfx_kaioken_start);

@@ -55,7 +55,7 @@ sprite_change_offset("fspecialair", 50, 70, true);
 sprite_change_offset("fspecialair_vfx", 50, 70, true);
 sprite_change_offset("jab_vfx", 50, 70, true);
 sprite_change_offset("fspecial_vfx", 100, 50);
-sprite_change_offset("fspecial_hurt", 100, 154, true);
+sprite_change_offset("fspecial_hurt", 98, 154, true);
 sprite_change_offset("uspecial", 93, 120);
 sprite_change_offset("dspecial", 50, 70, true);
 sprite_change_offset("dspecial_vfx", 50, 70, true);
@@ -94,6 +94,7 @@ sprite_change_offset("kirby_icon", 10, 10);
 
 sprite_change_offset("nspecial_proj", 64, 94);
 sprite_change_offset("jab_proj", 40, 26);
+sprite_change_offset("fspecialair_proj", 40, 26);
 
 sprite_change_offset("hud_default_hud", 0, -2);
 sprite_change_offset("hud_alt1_hud", 0, -2);

@@ -425,6 +425,7 @@ grabx = 0;
 
 //uspecial
 startp = [0, 0];
+prev_pos = x;
 
 //dstrong
 startpos = 0;
@@ -433,6 +434,10 @@ b2_pos = [];
 b3_pos = [];
 b4_pos = [];
 b5_pos = [];
+b6_pos = [];
+
+//dspecial
+dsp_ch = 0;
 
 // Animation Info
 
