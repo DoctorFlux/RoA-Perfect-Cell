@@ -44,7 +44,7 @@ switch(attack){
 		voice_window(1, VB_ATK_BIG);
 		break;
 	case AT_DAIR:
-		voice_window(1, VB_ATK_MED);
+		voice_window(2, VB_ATK_MED);
 		break;
 	case AT_FSTRONG:
 		voice_window(4, VB_ATK_BIG);
@@ -70,12 +70,7 @@ switch(attack){
 		break;
 	case AT_TAUNT:
 		if window_timer == 1 voice_play(VB_TAUNT);
-			if ssj != 2{
-				if attack_down{
-					ssj = 2;
-					sound_play(sfx_dbfz_charge);
-				}
-			}
+		if attack_down ssj = 2;
 		break;
 }
 
@@ -358,11 +353,12 @@ switch(attack){
 		if window == 2 && window_timer == 14{
 			sound_play(sfx_dbfz_kidan_fire);
 		}
-		move_cooldown[AT_FSPECIAL_AIR] = 99999;
+		move_cooldown[AT_FSPECIAL_AIR] = 5;
 		break;
 	
 		
 	case AT_USPECIAL:
+	if has_hit && !sfree set_window_value(AT_USPECIAL, 17, AG_WINDOW_TYPE, 1);
 	if (left_down || right_down) && window < 16 && !hitstop{
 		x += (right_down? 1: -1);
 		startp[@0] += (right_down? 1: -1);
@@ -481,25 +477,21 @@ switch(attack){
 	}
 	break;
 	case AT_DSPECIAL:
-		can_move = 0;
-		can_fast_fall = 0;
+	can_move = 0;
+	can_fast_fall = 0;
+	if window <= 2 || (window == 3 && window_timer <= 20){
 		vsp = 0;
 		hsp = 0;
-		if window == 2{
-			dsp_ch++;
-			if (!special_down && dsp_ch >= 5) || dsp_ch >= 60{
-				sound_stop(sfx_dbfz_energyfield_chrg);
-				voice_play(VB_BARRIER);
-				window = 3;
-				window_timer = 0;
-			}
+	}
+	if window == 2{
+		dsp_ch++;
+		if !special_down || dsp_ch >= 60{
+			window = 3;
+			window_timer = 0;
 		}
-		if window == 3{
-			hud_offset = 30;
-			if window_timer = 39{
-			}
-		}
-		break;
+	}
+	if window == 3 hud_offset = 30;
+	break;
 }
 
 

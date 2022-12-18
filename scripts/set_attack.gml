@@ -37,6 +37,8 @@ switch(attack){
 	}
 	break;
 	case AT_USPECIAL:
+	set_window_value(AT_USPECIAL, 17, AG_WINDOW_TYPE, 7);
+	sfree = free;
 	prev_pos = x;
 	set_attack_value(AT_USPECIAL, AG_SPRITE, sprite_get("uspecial"));
 	startp[@0] = x + 40 * spr_dir;
@@ -74,7 +76,14 @@ switch(attack){
 		break;
 }
 
-
+if attack == AT_DSPECIAL && ssj{
+	attack = AT_DSPECIAL_2;
+	if funny_broken_mode || has_rune("M") attack = 49;
+	spirit_bomb_juice = floor(ki / ki_max * 10)
+	
+	ssj = false;
+	ki = 0;
+}
 
 
 
