@@ -76,14 +76,7 @@ switch(attack){
 		break;
 }
 
-if attack == AT_DSPECIAL && ssj{
-	attack = AT_DSPECIAL_2;
-	if funny_broken_mode || has_rune("M") attack = 49;
-	spirit_bomb_juice = floor(ki / ki_max * 10)
-	
-	ssj = false;
-	ki = 0;
-}
+
 
 
 
