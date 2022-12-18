@@ -91,9 +91,6 @@ sfx_dbfz_kame_fire = sound_get("ARC_BTL_GKN_Kamehame_Fire");
 sfx_dbfz_kidan_charge = sound_get("ARC_BTL_CMN_kidan_Chrg");
 sfx_dbfz_kidan_fire = sound_get("ARC_BTL_CMN_kidan_Fire1");
 
-sfx_dbfz_energyfield_chrg = sound_get("ARC_BTL_CEN_EnergyField_Chrg");
-sfx_dbfz_energyfield_fire = sound_get("ARC_BTL_CEN_EnergyField_Fire");
-
 sfx_dbfz_sbomb_fire = sound_get("ARC_BTL_GKN_Gnkdm_Fire");
 sfx_dbfz_sbomb_hit = sound_get("ARC_BTL_GKN_Gnkdm_Hit");
 sfx_dbfz_sbomb_impact = sound_get("ARC_BTL_GKN_Gnkdm_Impct");
@@ -276,7 +273,7 @@ VB_METER_FULL = 	23;
 VB_TAUNT = 			29;
 VB_KAMEHAME =		31;
 VB_HA = 			37;
-VB_BARRIER =	    41;
+VB_S_SPIRIT_BOMB =	41;
 
 vb_idxes = [
 	VB_ATK_SMALL,
@@ -291,7 +288,7 @@ vb_idxes = [
 	VB_TAUNT,
 	VB_KAMEHAME,
 	VB_HA,
-	VB_BARRIER,
+	VB_S_SPIRIT_BOMB,
 	]
 
 vbs = [];
@@ -407,7 +404,7 @@ vbs[VB_HA] = [
 	612,
 	614,
 	]
-vbs[VB_BARRIER] = [
+vbs[VB_S_SPIRIT_BOMB] = [
 	210,
 	210,
 	]
@@ -429,6 +426,7 @@ grabx = 0;
 //uspecial
 startp = [0, 0];
 prev_pos = x;
+sfree = 0;
 
 //dstrong
 startpos = 0;

@@ -17,7 +17,6 @@ if (attack == AT_NSPECIAL || attack == AT_FSPECIAL || attack == AT_DSPECIAL || a
 
 switch(attack){
 	case AT_JAB:
-		move_cooldown[AT_JAB] = 20;
 		voice_window(2, VB_ATK_SMALL);
 		break;
 	case AT_DATTACK:
@@ -36,20 +35,16 @@ switch(attack){
 		voice_window(1, VB_ATK_SMALL);
 		break;
 	case AT_FAIR:
-		if window == 2 && window_timer == 1{
-			voice_play(VB_ATK_MED);
-		}
+		voice_window(2, VB_ATK_MED);
 		break;
 	case AT_BAIR:
 		voice_window(1, VB_ATK_MED);
 		break;
 	case AT_UAIR:
-		if window == 2 && window_timer == 1{
-			voice_play(VB_ATK_BIG);
-		}
+		voice_window(1, VB_ATK_BIG);
 		break;
 	case AT_DAIR:
-		voice_window(1, VB_ATK_MED);
+		voice_window(2, VB_ATK_MED);
 		break;
 	case AT_FSTRONG:
 		voice_window(4, VB_ATK_BIG);
@@ -75,12 +70,7 @@ switch(attack){
 		break;
 	case AT_TAUNT:
 		if window_timer == 1 voice_play(VB_TAUNT);
-			if ssj != 2{
-				if attack_down{
-					ssj = 2;
-					sound_play(sfx_dbfz_charge);
-				}
-			}
+		if attack_down ssj = 2;
 		break;
 }
 
@@ -92,7 +82,7 @@ switch(attack){
 		switch(window){
 			case 1: // startup
 				if window_timer == 1{
-					beam_juice = 60 + 60 * (ssj > 0); // 30 + 60 * (...)
+					beam_juice = 60 + 60; // 30 + 60 * (...)
 					beam_juice_max = 60 * 8;
 					beam_length = 0; // current length of beam
 					hsp = clamp(hsp, -2, 2);
@@ -307,51 +297,49 @@ switch(attack){
 		}
 		break;
 	case AT_FSPECIAL:
-		move_cooldown[AT_FSPECIAL] = 40;
 		can_move = false;
 		can_fast_fall = false;
 		switch(window){
 			case 1:
-				if window_timer == 34 && !hitstop{
-					for(var m = 0; m < 260; m++){
-						var colp = collision_rectangle(x, y, x + m * spr_dir, y - 60, oPlayer, 1, 1);
-						if instance_exists(colp){
-							set_hitbox_value(AT_FSPECIAL, 3, HG_HITBOX_X, abs(x - colp.x));
-							create_hitbox(AT_FSPECIAL, 3, x, y);
-							break;
-						}
+			if window_timer == 34 && !hitstop{
+				for(var m = 0; m < 260; m++){
+					var colp = collision_rectangle(x, y, x + m * spr_dir, y - 60, oPlayer, 1, 1);
+					if instance_exists(colp){
+						set_hitbox_value(AT_FSPECIAL, 3, HG_HITBOX_X, abs(x - colp.x));
+						create_hitbox(AT_FSPECIAL, 3, x, y);
+						break;
 					}
 				}
-				if instance_exists(grabp){
-					grabp.y = lerp(grabp.y, y - 160, 0.1);
-					grabp.state = PS_FLASHED;
-					grabp.x = grabx;
-					grabp.hsp = 0;
-					grabp.vsp = 0;
-				}
-				break;
+			}
+			if instance_exists(grabp){
+				grabp.y = lerp(grabp.y, y - 160, 0.1);
+				grabp.state = PS_FLASHED;
+				grabp.x = grabx;
+				grabp.hsp = 0;
+				grabp.vsp = 0;
+			}
+			break;
 			case 2:
-				if instance_exists(grabp){
-					set_window_value(AT_FSPECIAL, 3, AG_WINDOW_LENGTH, 16);
-					if window_timer < 46 && window_timer && !(window_timer % 8) && !hitstop && !instance_exists(fspec_hb){
-						set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_X, abs(grabp.x - x));
-						set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_Y, (grabp.y - grabp.char_height / 2) - y);
-						fspec_hb = create_hitbox(AT_FSPECIAL, 1, x, y);
-					}
-					if window_timer = 60 && !hitstop && !instance_exists(fspec_hb){
-						set_hitbox_value(AT_FSPECIAL, 2, HG_HITBOX_X, abs(grabp.x - x));
-						set_hitbox_value(AT_FSPECIAL, 2, HG_HITBOX_Y, (grabp.y - grabp.char_height / 2) - y);
-						fspec_hb = create_hitbox(AT_FSPECIAL, 2, x, y);
-					}
-				if window_timer < 60{
-					grabp.state = PS_FLASHED;
-					grabp.y = y - 160;
-					grabp.x = grabx;
-					grabp.hsp = 0;
-					grabp.vsp = 0;
-					}
-				}
-				break;
+			if instance_exists(grabp){
+			if window_timer < 46 && window_timer && !(window_timer % 8) && !hitstop && !instance_exists(fspec_hb){
+				set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_X, abs(grabp.x - x));
+				set_hitbox_value(AT_FSPECIAL, 1, HG_HITBOX_Y, (grabp.y - grabp.char_height / 2) - y);
+				fspec_hb = create_hitbox(AT_FSPECIAL, 1, x, y);
+			}
+			if window_timer = 60 && !hitstop && !instance_exists(fspec_hb){
+				set_hitbox_value(AT_FSPECIAL, 2, HG_HITBOX_X, abs(grabp.x - x));
+				set_hitbox_value(AT_FSPECIAL, 2, HG_HITBOX_Y, (grabp.y - grabp.char_height / 2) - y);
+				fspec_hb = create_hitbox(AT_FSPECIAL, 2, x, y);
+			}
+			if window_timer < 60{
+			grabp.state = PS_FLASHED;
+			grabp.y = y - 160;
+			grabp.x = grabx;
+			grabp.hsp = 0;
+			grabp.vsp = 0;
+			}
+		}
+			break;
 		}
 		break;
 	case AT_FSPECIAL_AIR:
@@ -365,17 +353,12 @@ switch(attack){
 		if window == 2 && window_timer == 14{
 			sound_play(sfx_dbfz_kidan_fire);
 		}
-		move_cooldown[AT_FSPECIAL_AIR] = 99999;
+		move_cooldown[AT_FSPECIAL_AIR] = 5;
 		break;
 	
 		
 	case AT_USPECIAL:
-		if has_hit_player == 0{
-			set_window_value(AT_USPECIAL, 17, AG_WINDOW_TYPE, 7);	
-		}else{
-			set_window_value(AT_USPECIAL, 17, AG_WINDOW_TYPE, 0);
-			move_cooldown[AT_USPECIAL] = 99999;
-		}
+	if has_hit && !sfree set_window_value(AT_USPECIAL, 17, AG_WINDOW_TYPE, 1);
 	if (left_down || right_down) && window < 16 && !hitstop{
 		x += (right_down? 1: -1);
 		startp[@0] += (right_down? 1: -1);
@@ -423,7 +406,6 @@ switch(attack){
 		if startpos != "e" y = lerp(y, startpos - 60, 0.1);
 		break;
 		case 2:
-		
 		if window_timer == 1{
 			for(var b = 0; b <= 400; b+=5){
 				if (position_meeting(x +(dcos(260)*b - 10)*spr_dir, y - dsin(260)*b + 10, asset_get("par_block")) || position_meeting(x +(dcos(260)*b - 10)*spr_dir, y - dsin(260)*b + 10, asset_get("par_jumpthrough"))) && !array_length(b1_pos){
@@ -495,24 +477,21 @@ switch(attack){
 	}
 	break;
 	case AT_DSPECIAL:
-		move_cooldown[AT_DSPECIAL] = 30;
-		can_move = 0;
-		can_fast_fall = 0;
-		if window <= 0 || (window == 3 && window_timer <= 20){
-			vsp = 0;
-			hsp = 0;
+	can_move = 0;
+	can_fast_fall = 0;
+	if window <= 2 || (window == 3 && window_timer <= 20){
+		vsp = 0;
+		hsp = 0;
+	}
+	if window == 2{
+		dsp_ch++;
+		if !special_down || dsp_ch >= 60{
+			window = 3;
+			window_timer = 0;
 		}
-		if window == 2{
-			dsp_ch++;
-			if !special_down || dsp_ch >= 60{
-				sound_stop(sfx_dbfz_energyfield_chrg);
-				voice_play(VB_BARRIER);
-				window = 3;
-				window_timer = 0;
-			}
-		}
-		if window == 3 hud_offset = 30;
-		break;
+	}
+	if window == 3 hud_offset = 30;
+	break;
 }
 
 
