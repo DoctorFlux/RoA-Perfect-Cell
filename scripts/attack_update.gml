@@ -36,7 +36,9 @@ switch(attack){
 		voice_window(1, VB_ATK_SMALL);
 		break;
 	case AT_FAIR:
-		voice_window(2, VB_ATK_MED);
+		if window == 2 && window_timer == 1{
+			voice_play(VB_ATK_MED);
+		}
 		break;
 	case AT_BAIR:
 		voice_window(1, VB_ATK_MED);
@@ -90,7 +92,7 @@ switch(attack){
 		switch(window){
 			case 1: // startup
 				if window_timer == 1{
-					beam_juice = 60 + 60; // 30 + 60 * (...)
+					beam_juice = 60 + 60 * (ssj > 0); // 30 + 60 * (...)
 					beam_juice_max = 60 * 8;
 					beam_length = 0; // current length of beam
 					hsp = clamp(hsp, -2, 2);
