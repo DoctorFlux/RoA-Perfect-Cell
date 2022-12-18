@@ -29,7 +29,6 @@ if phone_attacking && attack == AT_NSPECIAL{if window == 7{
 }
 
 if ssj{
-	print("e");
 	draw_outline(ssjs[ssj].color);
 	
 }

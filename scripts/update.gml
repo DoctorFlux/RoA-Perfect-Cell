@@ -1,5 +1,6 @@
 switch(state){
 	case PS_WALK:
+		sound_stop(sfx_dbfz_energyfield_chrg);
 		sound_stop(sfx_dbfz_energyfield_fire);
 		if("walkingsound" not in self){walkingsound = 0;}
 		walkingsound += 1;
@@ -16,9 +17,11 @@ switch(state){
 	case PS_WALK_TURN:
 	case PS_DASH_START:
 	case PS_ROLL_FORWARD:
-	case PS_HITSTUN:
-	case PS_HITSTUN_LAND:
-	case PS_ROLL_FORWARD:
+	case PS_WALL_JUMP:
+		move_cooldown[AT_USPECIAL] = 0;
+		move_cooldown[AT_FSPECIAL_AIR] = 0;
+		move_cooldown[AT_DSTRONG] = 0;
+		sound_stop(sfx_dbfz_energyfield_chrg);
 		sound_stop(sfx_dbfz_energyfield_fire);
 		walkingsound = 0;
 		break;
@@ -53,7 +56,7 @@ if get_player_color(player) == 0 {
 	set_ui_element(UI_WIN_PORTRAIT, sprite_get("hud_alt1_portrait"));
 }
 
-if move_cooldown[AT_FSPECIAL_AIR] && !free move_cooldown[AT_FSPECIAL_AIR] = 0;
+if move_cooldown[AT_FSPECIAL_AIR] && free move_cooldown[AT_FSPECIAL_AIR] = 5;
 
 
 if (funny_broken_mode || has_rune("J")) && ssj{

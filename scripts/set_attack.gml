@@ -37,6 +37,8 @@ switch(attack){
 	}
 	break;
 	case AT_USPECIAL:
+	set_window_value(AT_USPECIAL, 17, AG_WINDOW_TYPE, 7);
+	sfree = free;
 	prev_pos = x;
 	set_attack_value(AT_USPECIAL, AG_SPRITE, sprite_get("uspecial"));
 	startp[@0] = x + 40 * spr_dir;
@@ -73,7 +75,6 @@ switch(attack){
 		set_num_hitboxes(attack, 2 + (ssj > 0));
 		break;
 }
-
 
 
 

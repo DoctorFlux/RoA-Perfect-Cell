@@ -145,25 +145,25 @@ if attack == AT_FSPECIAL_AIR && state != PS_AIR_DODGE && state != PS_PARRY_START
 }
 if attack == AT_FSPECIAL && state != PS_AIR_DODGE && state != PS_PARRY_START && state != PS_PARRY && state != PS_ROLL_BACKWARD && state != PS_ROLL_FORWARD && state != PS_TECH_GROUND && state != PS_TECH_BACKWARD && state != PS_TECH_FORWARD{
 	if window == 1{
-		if	window_timer == 12 || window_timer == 13 || window_timer == 14{
+		if	window_timer == 34 || window_timer == 35{
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 0, x+60*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 0, x+110*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 0, x+160*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 0, x+200*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 		}
-		if	window_timer == 15 || window_timer == 16 || window_timer == 17{
+		if	window_timer == 36 || window_timer == 37{
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 1, x+60*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 1, x+110*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 1, x+160*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 1, x+200*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 		}
-		if	window_timer == 18 || window_timer == 19 || window_timer == 20{
+		if	window_timer == 38 || window_timer == 39{
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 2, x+60*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 2, x+110*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 2, x+160*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 2, x+200*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 		}
-		if	window_timer == 21 || window_timer == 22 || window_timer == 23{
+		if	window_timer == 40 || window_timer == 41{
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 3, x+60*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 3, x+110*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
 			draw_sprite_ext(sprite_get("fspecial_vfx_start"), 3, x+160*spr_dir, y-50, 1*spr_dir, 1, 0, c_white, 1);
